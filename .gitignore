@@ -11,5 +11,3 @@ venv/
 # VS Code settings (optional)
 .vscode/
 
-# Output files
-/outputs/
