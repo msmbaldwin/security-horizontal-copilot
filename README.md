@@ -46,16 +46,16 @@ These files help Copilot maintain structure and style.
 
 ### 3. Create an empty output file
 
-Before generating the article, **create (touch) an empty file** in the `outputs/` folder with this format:
+Before generating the article, **copy the template file** in the `outputs/` folder:
 
 ```bash
-touch outputs/secure-<service>.md
+cp outputs/secure-your-service.md outputs/secure-<service>.md
 ```
 
 Replace `<service>` with the lowercase, dash-separated name of your Azure service. For example:
 
 ```bash
-touch outputs/secure-azure-iot-hub.md
+cp outputs/secure-your-service.md outputs/secure-azure-iot-hub.md
 ```
 
 Then open this file in the editor — this is where Copilot will write the generated article.
