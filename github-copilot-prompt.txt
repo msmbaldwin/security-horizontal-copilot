@@ -9,7 +9,9 @@ inputs/template.txt (article structure)
 Start by calling the Microsoft Docs plugin using mcp_microsoft_doc2_microsoft_docs_search with the query:
 "<Service> security site:learn.microsoft.com"
 
-Also check if a baseline exists at https://learn.microsoft.com/en-us/security/benchmark/azure/. If found, incorporate it only when it aligns with the current service documentation.
+Check if a baseline exists at https://learn.microsoft.com/en-us/security/benchmark/azure/. If found, incorporate it only when it aligns with the current service documentation.
+
+Check if a service guide exists at https://learn.microsoft.com/en-us/azure/well-architected/service-guides/. If found, incorporate information in the "Security" section (if any) only when it aligns with the current service documentation.
 
 Generate the full article in Markdown, following the format in template.txt. Complete all sections fully — including any service-specific recommendations. Use relative links  (e.g., /azure/<service>/overview) when linking to articles on https://learn.microsoft.com.
 
