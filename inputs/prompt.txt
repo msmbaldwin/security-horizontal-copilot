@@ -1,0 +1,53 @@
+<!--
+IMPORTANT:
+When using this prompt with GitHub Copilot, you must provide the Azure service name in your chat message.
+
+For example: "This is for the service "Azure Key Vault": https://learn.microsoft.com/en-us/azure/key-vault/, referred to here and in the inputs as <Service>.  You are generating a "Secure your <Service>" article ..."
+
+Copilot will then substitute <Service> in this prompt accordingly.
+-->
+
+You are creating a security article for an Azure service , hereafter referred to as "<Service>".
+
+Your task is to generate a complete, structured article titled "Secure your <Service>" for Microsoft Learn.
+
+Use the following resources:
+- The structure defined in `template.txt`
+- The writing guidance in `guide.txt`
+- All available Microsoft Learn documentation related to <Service>
+
+Instructions:
+1. Call the Microsoft Docs MCP Server (`microsoft.docs.mcp`) using the `mcp_microsoft_doc2_microsoft_docs_search` function with the query:
+   "<Service> security site:learn.microsoft.com"
+
+2. Search thoroughly across the docset for every actionable, customer-relevant security recommendation — not just those under the "Security" node.
+
+3. Also check the Microsoft Cloud Security Benchmark (MCSB) site:
+   https://learn.microsoft.com/en-us/security/benchmark/azure/
+
+If a baseline is available (e.g., /security/benchmark/azure/baselines/<service>-security-baseline), use its content for reference. If the baseline and the docset disagree, prioritize the current docset.
+
+Article format:
+- Follow the Markdown layout defined in `template.txt`
+- Use the "ai-usage: ai-assisted" metadata tag
+- Include standard H2 sections when applicable, such as:
+  - Network security
+  - Identity management
+  - Privileged access
+  - Logging and threat detection
+  - Backup and recovery
+  - And any service-specific topics identified in the documentation
+
+Each section must include:
+- A short intro paragraph
+- A bulleted list where each item:
+  - Starts with a bolded directive
+  - Explains what to do and why it matters
+  - Uses a relative Microsoft Learn link (e.g., /azure/<service>/overview) — not a full URL
+  - Has a blank line between bullets
+
+Do not include vague or overly general guidance. Do not leave placeholder comments or incomplete sections. Complete the article fully.
+
+Write in clear, directive language. The final Markdown output should be ready for publication and optimized for AI systems such as Azure Copilot.
+
+Begin the article now.

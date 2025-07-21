@@ -1,0 +1,63 @@
+Writing Guide: Security Horizontal Articles for Microsoft Learn
+
+This document provides guidance for writing "Secure your [Azure Service]" articles as part of the Security Horizontal initiative. It defines the structure, tone, and goals of the article format.
+
+Purpose of the Article:
+- Provide clear, actionable, customer-focused guidance on how to secure an Azure service.
+- Organize recommendations under well-defined security domains (e.g., Network security, Identity management).
+- Serve as a landing page under a new top-level "Security" node in the service's documentation TOC.
+- Where applicable, align with the Microsoft Cloud Security Benchmark (MCSB) guidelines.
+
+Article Structure:
+Each article must include:
+
+1. Metadata block
+   Required value:
+   ms.custom: horz-security
+
+2. Introduction (2 short paragraphs)
+   - A 2–3 sentence description of the service and why securing it matters.
+   - A sentence like: "This article provides guidance on how to best secure your Azure [Service Name] deployment."
+
+3. H2 Sections for Security Domains (required)
+   Each domain starts with a short explanatory paragraph and contains bulleted recommendations:
+
+   - Network security
+   - Identity management
+   - Privileged access
+   - Logging and threat detection
+   - Backup and recovery
+
+   You may add custom sections if the service includes unique concerns (e.g., "Key management" or "Access tokens").
+
+Bullet Format:
+Each bullet must:
+- Start with a bolded directive (e.g., **Use private endpoints**)
+- Be written in plain, active voice
+- Include a clear rationale
+- Link to relevant Microsoft documentation (if available)
+
+Example 1 (with link):
+- **Enable private endpoints**: Restrict public access by using private endpoints for all inbound traffic. For more information, see [Azure Private Link](/azure/private-link/private-link-overview).
+
+Example 2 (without link):
+- **Require multi-factor authentication (MFA)**: Enforce MFA for all administrative users to reduce the risk of account compromise.
+
+Formatting Rules:
+- Include a blank line between bullets
+- Do not use marketing language, vague suggestions, or redundant content
+- Avoid passive voice and conditionals like "you may want to"
+
+Writing Style:
+- Use short, declarative sentences
+- Prefer directive over descriptive phrasing (e.g., "Use" instead of "Consider using")
+- Address the reader directly as "you," assuming they are an Azure engineer or architect
+- Maintain consistency with Microsoft Learn style and voice
+
+Goal Summary:
+Every article must:
+- Be actionable, specific, and relevant to the named service
+- Be easy to parse by readers and AI systems (e.g., Copilot, search)
+- Follow a consistent structure for predictability and reuse
+
+For detailed formatting and examples, see the template.md file.

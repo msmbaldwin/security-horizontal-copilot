@@ -1,0 +1,56 @@
+---
+title: Secure your <Azure service name> deployment
+description: Learn how to secure <service>, with best practices for protecting your deployment.
+author: msmbaldwin
+ms.author: mbaldwin
+ms.service: security
+ms.topic: conceptual
+ms.custom: horz-security
+ms.date: 01/01/2000
+---
+
+# Secure your <Azure service name> deployment
+
+<Azure service> provides capabilities to <briefly describe what the service does>. When deploying this service, it's important to follow security best practices to protect data, configurations, and infrastructure.
+
+This article provides guidance on how to best secure your Azure <service name> deployment.
+
+## Network security
+
+Briefly explain why network security matters for this service.
+
+- **Use virtual networks to segment workloads**: Isolate workloads and control traffic using VNets and NSGs. See [Azure Virtual Network](/azure/virtual-network/).
+
+- **Enable private endpoints**: Prevent public access by routing traffic through private endpoints. See [Azure Private Link](/azure/private-link/private-link-overview).
+
+## Identity management
+
+Briefly explain the identity risks and access requirements for this service.
+
+- **Use Microsoft Entra for centralized identity management**: Ensure consistent authentication and access policies across services. See [Microsoft Entra](/entra).
+
+- **Require multi-factor authentication**: Enforce MFA for all administrative access to reduce account compromise risk.
+
+## Privileged access
+
+Briefly explain why limiting privileged access is essential.
+
+- **Apply least privilege with RBAC**: Assign only necessary permissions using role-based access control. See [Azure RBAC](/azure/role-based-access-control/overview).
+
+- **Use just-in-time access via PIM**: Temporarily elevate privileges with Microsoft Entra Privileged Identity Management. See [PIM](/entra/id-governance/privileged-identity-management/pim-configure).
+
+## Logging and threat detection
+
+Briefly explain the importance of monitoring and visibility.
+
+- **Enable Microsoft Defender for Cloud**: Monitor and detect threats across services. See [Microsoft Defender for Cloud](/azure/defender-for-cloud/).
+
+- **Aggregate logs in Microsoft Sentinel**: Centralize and analyze security data to detect anomalies. See [Microsoft Sentinel](/azure/sentinel/).
+
+## Backup and recovery
+
+Briefly explain how backups protect against data loss and outages.
+
+- **Automate regular backups**: Use Azure Backup to protect important data and configurations. See [Azure Backup](/azure/backup/).
+
+- **Test recovery procedures**: Periodically validate recovery processes to ensure readiness in case of failure.
