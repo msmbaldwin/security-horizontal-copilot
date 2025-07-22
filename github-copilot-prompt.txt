@@ -1,4 +1,4 @@
-This is for the service "Azure Key Vault": https://learn.microsoft.com/en-us/azure/key-vault/, referred to here and in the inputs as <Service>.
+<Service> = "SERVICE_NAME>
 
 You are generating a "Secure your <Service>" article. Use the following input files from the workspace:
 
