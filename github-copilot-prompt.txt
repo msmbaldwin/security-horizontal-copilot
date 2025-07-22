@@ -1,4 +1,4 @@
-<Service> = "SERVICE_NAME>
+<Service> = "API management"
 
 You are generating a "Secure your <Service>" article. Use the following input files from the workspace:
 
