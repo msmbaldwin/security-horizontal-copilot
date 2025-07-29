@@ -1,4 +1,4 @@
-<Service> = "API management"
+<Service> = "Dynamics 365 Business Central", docset = https://learn.microsoft.com/en-us/dynamics365/business-central 
 
 You are generating a "Secure your <Service>" article. Use the following input files from the workspace:
 
@@ -15,4 +15,4 @@ Check if a service guide exists at https://learn.microsoft.com/en-us/azure/well-
 
 Generate the full article in Markdown, following the format in template.txt. Complete all sections fully — including any service-specific recommendations. Use relative links  (e.g., /azure/<service>/overview) when linking to articles on https://learn.microsoft.com.
 
-Write the final article directly into the open Markdown file.
+Write the final article directly into the open Markdown file name "secure-<Service>.md".

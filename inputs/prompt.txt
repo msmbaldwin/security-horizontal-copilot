@@ -22,15 +22,16 @@ Instructions:
 
 2. Search thoroughly across the docset for every actionable, customer-relevant security recommendation — not just those under the "Security" node.
 
-3. Also check the Microsoft Cloud Security Benchmark (MCSB) site:
-   https://learn.microsoft.com/en-us/security/benchmark/azure/
+3. Check the Microsoft Cloud Security Benchmark (MCSB) site for the service: https://learn.microsoft.com/en-us/security/benchmark/azure/. If found, incorporate information in the "Security" section (if any) only when it aligns with the current service documentation.
 
-If a baseline is available (e.g., /security/benchmark/azure/baselines/<service>-security-baseline), use its content for reference. If the baseline and the docset disagree, prioritize the current docset.
+4  Check the Well-Architected Framework (WAF) site for the service: https://learn.microsoft.com/en-us/azure/well-architected/service-guides/. If found, incorporate information in the "Security" section (if any) only when it aligns with the current service documentation.
+
+If a MCSB baseline or WAF service guide exist, use its content for reference. If the baseline and the docset disagree, prioritize the current docset.
 
 Article format:
 - Follow the Markdown layout defined in `template.txt`
 - Use the "ai-usage: ai-assisted" metadata tag
-- Include standard H2 sections when applicable, such as:
+- Include standard H2 sections when applicable, such as (but not limited to):
   - Network security
   - Identity management
   - Privileged access
@@ -47,6 +48,8 @@ Each section must include:
   - Has a blank line between bullets
 
 Do not include vague or overly general guidance. Do not leave placeholder comments or incomplete sections. Complete the article fully.
+
+End with a "Learn more" section that provides a list of security articles and resources specific to the service (e.g., a MCSB baseline, the WAF service guide, other security-focused articles with the service docset). 
 
 Write in clear, directive language. The final Markdown output should be ready for publication and optimized for AI systems such as Azure Copilot.
 

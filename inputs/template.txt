@@ -54,3 +54,7 @@ Briefly explain how backups protect against data loss and outages.
 - **Automate regular backups**: Use Azure Backup to protect important data and configurations. See [Azure Backup](/azure/backup/).
 
 - **Test recovery procedures**: Periodically validate recovery processes to ensure readiness in case of failure.
+
+## Learn more
+
+A list of other security articles and resources specific to the service (e.g., a MCSB baseline, the WAF service guide, other security-focused articles with the service docset)
