@@ -40,8 +40,18 @@ You are GitHub Copilot generating a comprehensive security checklist article for
 3. **Architecture Guide Check**: Search for Well-Architected Framework guide at `/azure/well-architected/service-guides/<service>`
 
 ### Content Integration Rules
-- **Primary Authority**: Service-specific documentation takes precedence
-- **Supporting Evidence**: Include MCSB/WAF only when it aligns with current service docs
+- **Primary Authority**: Service-specific documentation takes precedence.
+- **Supporting Evidence**: Include MCSB/WAF only when it aligns with current service docs.
+- **General Links**: Use general links from `security-control-links.yml` only when:
+  - No service-specific documentation exists, OR
+  - Additional context is clearly needed to understand or implement the recommendation.
+  - If both service-specific and general links are included:
+    - Place the service-specific link in the main sentence.
+    - Add the general link as a second sentence: `See also: [General guidance – Technology or article title](/azure/general-link).`
+    - Do not combine both links in the same "See ..." clause.
+  - General links should rarely appear outside bullets and only when they add clear, actionable value.
+  - Always reference the specific technology or full article title in the link text.
+  - Never replace a service-specific link with a general one.
 - **Validation Requirement**: All recommendations must be supported by current Microsoft Learn content
 - **Specificity Filter**: Include only recommendations that apply directly to the target service
 - **AI Accessibility**: Structure content for optimal consumption by language models and copilots

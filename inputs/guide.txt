@@ -35,9 +35,19 @@ Each security recommendation must follow this exact pattern:
 - **Text**: Link text should describe the destination clearly
 - **Sources**: Link only to Microsoft Learn documentation
 - **Currency**: Verify all links point to current, active content
+- **General links**: Use general links from `security-control-links.yml` only when:
+  - No service-specific documentation exists, OR
+  - Additional context is clearly needed to understand or implement the recommendation.
+  - If both service-specific and general links are included:
+    - Place the service-specific link in the main sentence.
+    - Add the general link as a second sentence: `See also: [General guidance – Technology or article title](/azure/general-link).`
+    - Do not combine both links in the same "See ..." clause.
+  - General links should rarely appear outside bullets and only when they add clear, actionable value.
+  - Always reference the specific technology or full article title in the link text.
+  - Never replace a service-specific link with a general one.
 
 ### Formatting Rules
-- **Bold actions**: Make the action portion of each bullet bold
+- **Bold actions**: Make the action portion of each bullet **bold**
 - **Spacing**: Include blank line between bullet points
 - **Code formatting**: Use backticks for service names, commands, and values
 - **Punctuation**: End bullets with periods, maintain parallel structure

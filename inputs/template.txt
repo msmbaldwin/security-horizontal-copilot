@@ -19,7 +19,8 @@ This article provides guidance on how to best secure your Azure <service name> d
 
 <Brief paragraph explaining network security importance for this service>
 
-- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).  
+  See also: [General guidance – Technology or article title](/azure/general-link). <!-- Add general link only if needed -->
 
 - **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
 
@@ -27,7 +28,8 @@ This article provides guidance on how to best secure your Azure <service name> d
 
 <Brief paragraph explaining identity and access risks for this service>
 
-- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).  
+  See also: [General guidance – Technology or article title](/azure/general-link). <!-- Add general link only if needed -->
 
 - **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
 
@@ -76,3 +78,4 @@ This article provides guidance on how to best secure your Azure <service name> d
 - [Microsoft Cloud Security Benchmark – <Service>](/security/benchmark/azure/<service>)
 - [Well-Architected Framework – <Service> guide](/azure/well-architected/service-guides/<service>)
 - [Security documentation for <Service>](/azure/<service>/security/)
+  See also: [Azure Security Documentation](/azure/security/). <!-- Example of sparing general link usage -->
