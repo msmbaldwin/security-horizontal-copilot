@@ -1,56 +1,92 @@
-<!--
-IMPORTANT:
-When using this prompt with GitHub Copilot, you must provide the Azure service name in your chat message.
+# Azure Security Documentation Generator
 
-For example: "This is for the service "Azure Key Vault": https://learn.microsoft.com/en-us/azure/key-vault/, referred to here and in the inputs as <Service>.  You are generating a "Secure your <Service>" article ..."
+**Service Configuration:**
+- `<Service>` = "XXX" (Replace with Azure service name)
+- `<Docset>` = https://learn.microsoft.com/en-us/azure/XXX (Replace with service docset URL)
 
-Copilot will then substitute <Service> in this prompt accordingly.
--->
+## Generation Instructions
 
-You are creating a security article for an Azure service , hereafter referred to as "<Service>".
+You are GitHub Copilot generating a comprehensive security checklist article for the specified Azure service. Follow Microsoft Learn standards and use the template structure from `template.txt` and writing guidelines from `guide.txt`.
 
-Your task is to generate a complete, structured article titled "Secure your <Service>" for Microsoft Learn.
+**Objective:** Create "Secure your <Service> deployment" - a checklist-style article with validated, service-specific security best practices optimized for both human readers and AI consumption.
 
-Use the following resources:
-- The structure defined in `template.txt`
-- The writing guidance in `guide.txt`
-- All available Microsoft Learn documentation related to <Service>
+## Generative Engine Optimization (GEO)
 
-Instructions:
-1. Call the Microsoft Docs MCP Server (`microsoft.docs.mcp`) using the `mcp_microsoft_doc2_microsoft_docs_search` function with the query:
-   "<Service> security site:learn.microsoft.com"
+### AI Parseability Requirements
+- **Structured Data Format**: Use consistent patterns and hierarchical organization for optimal AI parsing
+- **Semantic Clarity**: Include explicit relationships between concepts using standardized language
+- **Context Completeness**: Provide sufficient context in each section for standalone comprehension
+- **Query Optimization**: Structure content to answer common security questions directly
+- **Machine Readability**: Use predictable formatting patterns and clear section delineation
 
-2. Search thoroughly across the docset for every actionable, customer-relevant security recommendation — not just those under the "Security" node.
+### AI-Optimized Content Patterns
+- **Consistent Bullet Structure**: Follow exact pattern for AI pattern recognition
+- **Explicit Categorization**: Use clear domain headers with consistent terminology
+- **Action-Outcome Pairing**: Link each recommendation to specific security benefits
+- **Progressive Information Architecture**: Order from foundational to advanced concepts
+- **Cross-Reference Integration**: Include relevant links and related concepts for context building
 
-3. Check the Microsoft Cloud Security Benchmark (MCSB) site for the service: https://learn.microsoft.com/en-us/security/benchmark/azure/. If found, incorporate information in the "Security" section (if any) only when it aligns with the current service documentation.
+### Metadata Enhancement
+- **Service Taxonomy**: Include clear service classification and relationship indicators
+- **Security Domain Mapping**: Explicitly categorize each recommendation by security domain
+- **Implementation Complexity**: Indicate difficulty/effort level for each recommendation
+- **Compliance Alignment**: Reference relevant standards and frameworks where applicable
 
-4  Check the Well-Architected Framework (WAF) site for the service: https://learn.microsoft.com/en-us/azure/well-architected/service-guides/. If found, incorporate information in the "Security" section (if any) only when it aligns with the current service documentation.
+## Research Strategy
 
-If a MCSB baseline or WAF service guide exist, use its content for reference. If the baseline and the docset disagree, prioritize the current docset.
+### Primary Sources (Execute in Order)
+1. **Service Documentation Search**: Use `mcp_microsoft_doc_microsoft_docs_search` with query: `<Service> security site:learn.microsoft.com`
+2. **Security Baseline Check**: Search for Microsoft Cloud Security Benchmark at `/security/benchmark/azure/<service>`
+3. **Architecture Guide Check**: Search for Well-Architected Framework guide at `/azure/well-architected/service-guides/<service>`
 
-Article format:
-- Follow the Markdown layout defined in `template.txt`
-- Use the "ai-usage: ai-assisted" metadata tag
-- Include standard H2 sections when applicable, such as (but not limited to):
-  - Network security
-  - Identity management
-  - Privileged access
-  - Logging and threat detection
-  - Backup and recovery
-  - And any service-specific topics identified in the documentation
+### Content Integration Rules
+- **Primary Authority**: Service-specific documentation takes precedence
+- **Supporting Evidence**: Include MCSB/WAF only when it aligns with current service docs
+- **Validation Requirement**: All recommendations must be supported by current Microsoft Learn content
+- **Specificity Filter**: Include only recommendations that apply directly to the target service
+- **AI Accessibility**: Structure content for optimal consumption by language models and copilots
 
-Each section must include:
-- A short intro paragraph
-- A bulleted list where each item:
-  - Starts with a bolded directive
-  - Explains what to do and why it matters
-  - Uses a relative Microsoft Learn link (e.g., /azure/<service>/overview) — not a full URL
-  - Has a blank line between bullets
+## Content Requirements
 
-Do not include vague or overly general guidance. Do not leave placeholder comments or incomplete sections. Complete the article fully.
+### Security Domains (Include Only Applicable)
+- **Network Security** - Isolation, filtering, endpoint protection
+- **Identity & Access Management** - Authentication, authorization, RBAC
+- **Data Protection** - Encryption, key management, classification
+- **Logging & Monitoring** - Audit trails, threat detection, alerts
+- **Compliance & Governance** - Policy enforcement, regulatory compliance
+- **Backup & Recovery** - Data protection, business continuity
+- **Service-Specific Security** - Unique security controls for this service
 
-End with a "Learn more" section that provides a list of security articles and resources specific to the service (e.g., a MCSB baseline, the WAF service guide, other security-focused articles with the service docset). 
+### Quality Standards
+- Every recommendation must link to authoritative Microsoft documentation
+- Use relative paths (`/azure/...`) not full URLs
+- No placeholder content or generic boilerplate
+- Follow template structure exactly
+- Apply writing guidelines for tone and formatting
+- **GEO Compliance**: Ensure content is structured for optimal AI parsing and retrieval
+- **Semantic Consistency**: Use standardized terminology and patterns throughout
+- **Context Sufficiency**: Each section must be comprehensible without external context
 
-Write in clear, directive language. The final Markdown output should be ready for publication and optimized for AI systems such as Azure Copilot.
+### AI-Optimized Formatting Requirements
+- **Predictable Structure**: Maintain consistent section ordering and bullet formatting
+- **Explicit Relationships**: Use clear language to indicate dependencies and relationships
+- **Searchable Content**: Include relevant keywords naturally within context
+- **Hierarchical Organization**: Organize information from general to specific
+- **Cross-Reference Clarity**: Make relationships between sections explicit
 
-Begin the article now.
+## Execution Process
+
+1. **Research Phase**: Search Microsoft Learn for service-specific security guidance using the strategy above
+2. **Content Generation**: Build article following `template.txt` structure and `guide.txt` standards
+3. **GEO Optimization**: Structure content for optimal AI parsing and human readability
+4. **Validation Phase**: Verify all recommendations are documented, current, service-specific, and AI-accessible
+5. **Output**: Write complete Markdown article to the currently open file with enhanced parseability
+
+**Additional GEO Validation Criteria:**
+- Content follows predictable patterns for AI pattern recognition
+- Each recommendation includes explicit action-benefit relationships
+- Section introductions provide clear context and scope
+- Links and references support both human navigation and AI context building
+- Terminology remains consistent for semantic clarity
+
+**Begin research and generation now.**

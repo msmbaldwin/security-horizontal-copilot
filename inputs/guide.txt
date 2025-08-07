@@ -1,63 +1,110 @@
-Writing Guide: Security Horizontal Articles for Microsoft Learn
+# Writing Standards: Security Horizontal Articles
 
-This document provides guidance for writing "Secure your [Azure Service]" articles as part of the Security Horizontal initiative. It defines the structure, tone, and goals of the article format.
+This guide defines the specific writing style, tone, and formatting requirements for "Secure your <Service>" articles.
 
-Purpose of the Article:
-- Provide clear, actionable, customer-focused guidance on how to secure an Azure service.
-- Organize recommendations under well-defined security domains (e.g., Network security, Identity management).
-- Serve as a landing page under a new top-level "Security" node in the service's documentation TOC.
-- Where applicable, align with the Microsoft Cloud Security Benchmark (MCSB) guidelines.
+## Writing Style Requirements
 
-Article Structure:
-Each article must include:
+### Voice and Tone
+- **Active voice**: "Enable private endpoints" not "Private endpoints should be enabled"
+- **Direct address**: Use "you" to address the reader
+- **Imperative mood**: Give clear commands and directions
+- **Professional tone**: Authoritative but accessible
+- **Concise language**: Eliminate unnecessary words
 
-1. Metadata block
-   Required value:
-   ms.custom: horz-security
+### Language Standards
+- **Directive verbs**: Start recommendations with action words (Enable, Configure, Implement, Restrict, Require)
+- **Plain language**: Avoid jargon, explain technical terms when necessary
+- **Exact terminology**: Use precise Azure service and feature names
+- **Consistent terms**: Use the same terminology throughout the article
 
-2. Introduction (2 short paragraphs)
-   - A 2–3 sentence description of the service and why securing it matters.
-   - A sentence like: "This article provides guidance on how to best secure your Azure [Service Name] deployment."
+## Formatting Requirements
 
-3. H2 Sections for Security Domains (required)
-   Each domain starts with a short explanatory paragraph and contains bulleted recommendations:
+### Bullet Point Structure
+Each security recommendation must follow this exact pattern:
 
-   - Network security
-   - Identity management
-   - Privileged access
-   - Logging and threat detection
-   - Backup and recovery
+```markdown
+- **Action verb + specific control**: Clear explanation of the recommendation including why it improves security. See [Feature documentation](/azure/service/feature).
+```
 
-   You may add custom sections if the service includes unique concerns (e.g., "Key management" or "Access tokens").
+**Examples:**
+- **Enable private endpoints**: Eliminate public internet exposure by routing traffic through your virtual network. See [Azure Private Link](/azure/private-link/private-link-overview).
+- **Require multi-factor authentication**: Reduce account compromise risk by enforcing MFA for all administrative access. See [Microsoft Entra MFA](/entra/identity/authentication/concept-mfa-howitworks).
 
-Bullet Format:
-Each bullet must:
-- Start with a bolded directive (e.g., **Use private endpoints**)
-- Be written in plain, active voice
-- Include a clear rationale
-- Link to relevant Microsoft documentation (if available)
+### Link Standards
+- **Format**: Use relative paths `/azure/service/feature`
+- **Text**: Link text should describe the destination clearly
+- **Sources**: Link only to Microsoft Learn documentation
+- **Currency**: Verify all links point to current, active content
 
-Example 1 (with link):
-- **Enable private endpoints**: Restrict public access by using private endpoints for all inbound traffic. For more information, see [Azure Private Link](/azure/private-link/private-link-overview).
+### Formatting Rules
+- **Bold actions**: Make the action portion of each bullet bold
+- **Spacing**: Include blank line between bullet points
+- **Code formatting**: Use backticks for service names, commands, and values
+- **Punctuation**: End bullets with periods, maintain parallel structure
 
-Example 2 (without link):
-- **Require multi-factor authentication (MFA)**: Enforce MFA for all administrative users to reduce the risk of account compromise.
+## Content Organization Standards
 
-Formatting Rules:
-- Include a blank line between bullets
-- Do not use marketing language, vague suggestions, or redundant content
-- Avoid passive voice and conditionals like "you may want to"
+### Security Domain Ordering
+**Foundation-first principle**: Order domains by foundational importance to the specific service, not rigid sequence.
 
-Writing Style:
-- Use short, declarative sentences
-- Prefer directive over descriptive phrasing (e.g., "Use" instead of "Consider using")
-- Address the reader directly as "you," assuming they are an Azure engineer or architect
-- Maintain consistency with Microsoft Learn style and voice
+**Default order** (when domains have equal foundational importance):
+1. Network security
+2. Identity and access management  
+3. Data protection
+4. Logging and monitoring
+5. Compliance and governance
+6. Backup and recovery
+7. Service-specific security
 
-Goal Summary:
-Every article must:
-- Be actionable, specific, and relevant to the named service
-- Be easy to parse by readers and AI systems (e.g., Copilot, search)
-- Follow a consistent structure for predictability and reuse
+**Service-specific ordering examples:**
+- **Key management services**: Service-specific security → Data protection → Identity and access management
+- **Identity services**: Identity and access management → Network security → Data protection
+- **Storage services**: Data protection → Network security → Identity and access management
+- **Compute services**: Network security typically remains first
 
-For detailed formatting and examples, see the template.md file.
+**Apply this ordering logic:**
+1. Core service security fundamentals
+2. Access control and authentication
+3. Data protection and encryption
+4. Infrastructure and network security
+5. Operational security and monitoring
+
+### Recommendation Ordering Within Domains
+1. **Foundation first**: Basic security controls before advanced features
+2. **Impact priority**: High-impact recommendations before supplementary ones
+3. **Implementation flow**: Simple configurations before complex setups
+
+## Content Quality Standards
+
+### Service Specificity
+- Include only recommendations that apply directly to the target service
+- Avoid generic security advice that applies to all Azure services
+- Ensure each recommendation addresses service-specific risks or capabilities
+
+### Evidence Requirements
+- Every recommendation must link to official Microsoft Learn documentation
+- Base all guidance on current, published documentation
+- Verify that linked documentation supports the specific recommendation
+
+### Actionability Standards
+- Provide specific implementation steps, not vague suggestions
+- Include clear explanations of security benefits
+- Ensure recommendations are technically implementable
+
+## Microsoft Learn Compliance
+
+### Style Alignment
+- Follow Microsoft Learn voice and tone guidelines
+- Use sentence case for headings
+- Apply consistent formatting throughout
+- Maintain professional, helpful tone
+
+### Technical Accuracy
+- Use exact Azure service names and feature terminology
+- Verify technical accuracy of all recommendations
+- Ensure compatibility with current Azure capabilities
+- [ ] No placeholder content remains
+- [ ] Formatting is consistent throughout
+- [ ] Links use relative paths
+- [ ] Content is optimized for AI parsing
+- [ ] Article structure matches template

@@ -1,12 +1,12 @@
 ---
 title: Secure your <Azure service name> deployment
 description: Learn how to secure <service>, with best practices for protecting your deployment.
-author: msmbaldwin
-ms.author: mbaldwin
-ms.service: security
+author: 
+ms.author: 
+ms.service: <service>
 ms.topic: conceptual
 ms.custom: horz-security
-ms.date: 01/01/2000
+ms.date: <MM/DD/YYYY>
 ---
 
 # Secure your <Azure service name> deployment
@@ -17,44 +17,62 @@ This article provides guidance on how to best secure your Azure <service name> d
 
 ## Network security
 
-Briefly explain why network security matters for this service.
+<Brief paragraph explaining network security importance for this service>
 
-- **Use virtual networks to segment workloads**: Isolate workloads and control traffic using VNets and NSGs. See [Azure Virtual Network](/azure/virtual-network/).
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
 
-- **Enable private endpoints**: Prevent public access by routing traffic through private endpoints. See [Azure Private Link](/azure/private-link/private-link-overview).
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
 
-## Identity management
+## Identity and access management
 
-Briefly explain the identity risks and access requirements for this service.
+<Brief paragraph explaining identity and access risks for this service>
 
-- **Use Microsoft Entra for centralized identity management**: Ensure consistent authentication and access policies across services. See [Microsoft Entra](/entra).
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
 
-- **Require multi-factor authentication**: Enforce MFA for all administrative access to reduce account compromise risk.
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
 
-## Privileged access
+## Data protection
 
-Briefly explain why limiting privileged access is essential.
+<Brief paragraph explaining data protection importance for this service>
 
-- **Apply least privilege with RBAC**: Assign only necessary permissions using role-based access control. See [Azure RBAC](/azure/role-based-access-control/overview).
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
 
-- **Use just-in-time access via PIM**: Temporarily elevate privileges with Microsoft Entra Privileged Identity Management. See [PIM](/entra/id-governance/privileged-identity-management/pim-configure).
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
 
-## Logging and threat detection
+## Logging and monitoring
 
-Briefly explain the importance of monitoring and visibility.
+<Brief paragraph explaining monitoring importance for this service>
 
-- **Enable Microsoft Defender for Cloud**: Monitor and detect threats across services. See [Microsoft Defender for Cloud](/azure/defender-for-cloud/).
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
 
-- **Aggregate logs in Microsoft Sentinel**: Centralize and analyze security data to detect anomalies. See [Microsoft Sentinel](/azure/sentinel/).
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
+
+## Compliance and governance
+
+<Brief paragraph explaining compliance importance for this service>
+
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
+
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
 
 ## Backup and recovery
 
-Briefly explain how backups protect against data loss and outages.
+<Brief paragraph explaining backup importance for this service>
 
-- **Automate regular backups**: Use Azure Backup to protect important data and configurations. See [Azure Backup](/azure/backup/).
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
 
-- **Test recovery procedures**: Periodically validate recovery processes to ensure readiness in case of failure.
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
+
+## Service-specific security
+
+<Brief paragraph explaining unique security considerations for this service>
+
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
+
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
 
 ## Learn more
 
-A list of other security articles and resources specific to the service (e.g., a MCSB baseline, the WAF service guide, other security-focused articles with the service docset)
+- [Microsoft Cloud Security Benchmark – <Service>](/security/benchmark/azure/<service>)
+- [Well-Architected Framework – <Service> guide](/azure/well-architected/service-guides/<service>)
+- [Security documentation for <Service>](/azure/<service>/security/)
