@@ -23,15 +23,15 @@ This guide defines the specific writing style, tone, and formatting requirements
 Each security recommendation must follow this exact pattern:
 
 ```markdown
-- **Action verb + specific control**: Clear explanation of the recommendation including why it improves security. See [Feature documentation](/azure/service/feature).
+- **Action verb + specific control**: Clear explanation of the recommendation including why it improves security. See [Feature documentation](https://learn.microsoft.com/azure/service/feature).
 ```
 
 **Examples:**
-- **Enable private endpoints**: Eliminate public internet exposure by routing traffic through your virtual network. See [Azure Private Link](/azure/private-link/private-link-overview).
-- **Require multi-factor authentication**: Reduce account compromise risk by enforcing MFA for all administrative access. See [Microsoft Entra MFA](/entra/identity/authentication/concept-mfa-howitworks).
+- **Enable private endpoints**: Eliminate public internet exposure by routing traffic through your virtual network. See [Azure Private Link](https://learn.microsoft.com/azure/private-link/private-link-overview).
+- **Require multi-factor authentication**: Reduce account compromise risk by enforcing MFA for all administrative access. See [Microsoft Entra MFA](https://learn.microsoft.com/entra/identity/authentication/concept-mfa-howitworks).
 
 ### Link Standards
-- **Format**: Use relative paths `/azure/service/feature`
+- **Format**: Use full URLs (e.g., `https://learn.microsoft.com/azure/service/feature`)
 - **Text**: Link text should describe the destination clearly
 - **Sources**: Link only to Microsoft Learn documentation
 - **Currency**: Verify all links point to current, active content
@@ -40,7 +40,7 @@ Each security recommendation must follow this exact pattern:
   - Additional context is clearly needed to understand or implement the recommendation.
   - If both service-specific and general links are included:
     - Place the service-specific link in the main sentence.
-    - Add the general link as a second sentence: `See also: [General guidance – Technology or article title](/azure/general-link).`
+    - Add the general link as a second sentence: `See also: [General guidance – Technology or article title](https://learn.microsoft.com/azure/general-link).`
     - Do not combine both links in the same "See ..." clause.
   - General links should rarely appear outside bullets and only when they add clear, actionable value.
   - Always reference the specific technology or full article title in the link text.
@@ -115,6 +115,6 @@ Each security recommendation must follow this exact pattern:
 - Ensure compatibility with current Azure capabilities
 - [ ] No placeholder content remains
 - [ ] Formatting is consistent throughout
-- [ ] Links use relative paths
+- [ ] Links use full URLs
 - [ ] Content is optimized for AI parsing
 - [ ] Article structure matches template

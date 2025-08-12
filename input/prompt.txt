@@ -79,7 +79,7 @@ You are GitHub Copilot generating a comprehensive security checklist article for
 
 ### Quality Standards
 - Every recommendation must link to authoritative Microsoft documentation.
-- Use relative paths (`/azure/...`) not full URLs.
+- Use full URLs.
 - No placeholder content or generic boilerplate.
 - Follow `template.txt` structure exactly.
 - Apply `guide.txt` writing guidelines for tone and formatting.
@@ -99,8 +99,22 @@ You are GitHub Copilot generating a comprehensive security checklist article for
 1. **Research Phase**: Search Microsoft Learn for service-specific security guidance using the strategy above.
 2. **Content Generation**: Build the article following `template.txt` and `guide.txt`.
 3. **GEO Optimization**: Structure content for optimal AI parsing and human readability.
-4. **Validation Phase**: Verify all recommendations are documented, current, service-specific, and AI-accessible.
-5. **File Write**: Automatically infer `<ServiceSlug>` from `<Service>` using the rule above, create `./output` (if needed), and write the complete Markdown to `./output/secure-<ServiceSlug>.md`. Do not write to the currently open file.
+4. **Validation Phase**: 
+  - Verify each recommendation has explicit documentation reference
+  - Confirm all security guidance is current and not deprecated
+  - Ensure recommendations are specifically applicable to the target service
+  - Validate content follows AI-accessible patterns defined in GEO requirements
+
+5. **Link Verification**:
+  - Verify all URLs resolve to valid Microsoft Learn documentation pages
+  - Ensure each link points to the most specific documentation for the recommendation
+  - Check that no placeholder or incomplete URLs remain in the document
+
+6. **File Output**:
+  - Apply the ServiceSlug Inference Rule to convert <Service> to <ServiceSlug>
+  - Create the ./output directory if it doesn't exist
+  - Write the complete, formatted Markdown to ./output/secure-<ServiceSlug>.md
+  - Do not modify the current document or any template files
 
 **Additional GEO Validation Criteria:**
 - Content follows predictable patterns for AI pattern recognition.

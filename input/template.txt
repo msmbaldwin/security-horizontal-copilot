@@ -1,0 +1,81 @@
+---
+title: Secure your <Azure service name> deployment
+description: Learn how to secure <service>, with best practices for protecting your deployment.
+author: 
+ms.author: 
+ms.service: <service>
+ms.topic: conceptual
+ms.custom: horz-security
+ms.date: <MM/DD/YYYY>
+---
+
+# Secure your <Azure service name> deployment
+
+<Azure service> provides capabilities to <briefly describe what the service does>. When deploying this service, it's important to follow security best practices to protect data, configurations, and infrastructure.
+
+This article provides guidance on how to best secure your Azure <service name> deployment.
+
+## Network security
+
+<Brief paragraph explaining network security importance for this service>
+
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).  
+  See also: [General guidance – Technology or article title](https://learn.microsoft.com/azure/general-link). <!-- Add general link only if needed -->
+
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).
+
+## Identity and access management
+
+<Brief paragraph explaining identity and access risks for this service>
+
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).  
+  See also: [General guidance – Technology or article title](https://learn.microsoft.com/azure/general-link). <!-- Add general link only if needed -->
+
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).
+
+## Data protection
+
+<Brief paragraph explaining data protection importance for this service>
+
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).
+
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).
+
+## Logging and monitoring
+
+<Brief paragraph explaining monitoring importance for this service>
+
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).
+
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).
+
+## Compliance and governance
+
+<Brief paragraph explaining compliance importance for this service>
+
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).
+
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).
+
+## Backup and recovery
+
+<Brief paragraph explaining backup importance for this service>
+
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).
+
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).
+
+## Service-specific security
+
+<Brief paragraph explaining unique security considerations for this service>
+
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).
+
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).
+
+## Learn more
+
+- [Microsoft Cloud Security Benchmark – <Service>](https://learn.microsoft.com/security/benchmark/azure/<service>)
+- [Well-Architected Framework – <Service> guide](https://learn.microsoft.com/azure/well-architected/service-guides/<service>)
+- [Security documentation for <Service>](https://learn.microsoft.com/azure/<service>/security/)
+  See also: [Azure Security Documentation](https://learn.microsoft.com/azure/security/). <!-- Example of sparing general link usage -->
