@@ -1,8 +1,8 @@
 # GitHub Copilot – Security Horizontal Draft Generator
 
-This project generates **publication-ready drafts** for Microsoft Learn's [Security Horizontal initiative](/help/contribute/contribute-security-horizontal). The output is a structured "Secure your <Service>" article that consolidates actionable, service-specific security guidance for Azure services.
+This project generates **initial draft content** for Microsoft Learn's [Security Horizontal initiative](/help/contribute/contribute-security-horizontal). The output is a structured "Secure your <Service>" article that consolidates actionable, service-specific security guidance for Azure services.
 
-> **Note:** Generated drafts follow Microsoft Learn standards but should be reviewed with the service PM team to ensure completeness and technical accuracy.
+> **IMPORTANT:** While these drafts follow Microsoft Learn standards and leverage your expertise as a writer, collaboration with the service PM team is essential to validate technical details and ensure all service-specific security recommendations are accurately represented.
 
 ## 🧰 Prerequisites
 
@@ -18,11 +18,11 @@ This project generates **publication-ready drafts** for Microsoft Learn's [Secur
 
 ```
 security-horizontal-copilot/
-├── inputs/
+├── input/
 │   ├── prompt.txt       # Generation instructions and research strategy
 │   ├── template.txt     # Article structure and Markdown template
 │   └── guide.txt        # Writing standards and formatting requirements
-├── outputs/             # Generated security articles
+├── output/              # Generated security articles
 └── README.md
 ```
 
@@ -59,20 +59,17 @@ Ensure you have:
 - Microsoft Docs plugin installed and functional
 - This repository open as your workspace
 
-### 2. Load Context Files
+**Important:** Open the root folder of this repository in VS Code (`File > Open Folder...` and select the `security-horizontal-copilot` folder). This ensures Copilot can correctly find the `input` and `output` directories.
 
-Open these files in VS Code tabs to provide Copilot with full context:
-```
-inputs/prompt.txt    # Generation instructions and research strategy
-inputs/template.txt  # Article structure and formatting template
-inputs/guide.txt     # Writing standards and quality requirements
-```
+### 2. Prepare for Generation
 
-**Critical:** Copilot reads from open tabs, so having all three files loaded provides the complete generation context.
+Copy the entire contents of `input/prompt.txt` to your clipboard. You'll paste and modify this in the GitHub Copilot Chat window in a later step.
 
-### 3. Configure Target Service
+### 3. Generate Article
 
-Edit `prompt.txt` and replace the service configuration variables:
+1. Open GitHub Copilot Chat in VS Code
+2. Paste the contents of `prompt.txt` into the chat window
+3. Before sending, modify the Service Configuration variables directly in the chat window:
 
 ```txt
 **Service Configuration:**
@@ -80,43 +77,65 @@ Edit `prompt.txt` and replace the service configuration variables:
 - `<Docset>` = https://learn.microsoft.com/en-us/azure/app-service (Replace with service docset URL)
 ```
 
-**Examples:**
-- `<Service>` = "Azure Kubernetes Service"
-- `<Service>` = "Azure SQL Database"  
-- `<Service>` = "Azure IoT Hub"
+4. Send your modified prompt to GitHub Copilot
 
-### 4. Create Output File
-
-Create a new file in the `outputs/` folder:
-```bash
-touch outputs/secure-<service-name>.md
-```
-
-**Naming convention:** Use lowercase with hyphens
-- `secure-azure-iot-hub.md`
-- `secure-app-service.md` 
-- `secure-kubernetes-service.md`
-
-**Important:** Open this file in VS Code - Copilot will write the article directly into the currently open file.
-
-### 5. Generate Article
-
-Copy the entire contents of `prompt.txt` and paste into Copilot Chat.
+**Examples of service names:**
+- Azure Kubernetes Service
+- Azure SQL Database  
+- Azure IoT Hub
 
 **Copilot will automatically:**
 - Search Microsoft Learn for service-specific security guidance using the research strategy
 - Follow the exact template structure from `template.txt`
 - Apply writing standards and formatting from `guide.txt`
-- Generate a complete, properly formatted article in your open file
+- Generate a complete, properly formatted article and save it to `output/secure-<ServiceSlug>.md`
 
-### 6. Review and Validate
+**Note:** The prompt will automatically create the output file following the naming convention:
+- `secure-azure-iot-hub.md`
+- `secure-app-service.md` 
+- `secure-kubernetes-service.md`
+
+### 4. Review and Validate
 
 After generation, verify:
-- **Link accuracy**: All links use relative paths (`/azure/...`) and point to current docs
+
+- **Link accuracy**: All links work and point to real, live articles on https://learn.microsoft.com.
 - **Service specificity**: All recommendations apply directly to the target service
 - **Evidence support**: Every recommendation links to authoritative Microsoft Learn documentation
 - **Format consistency**: Bullet points follow the exact pattern from `guide.txt`
 - **Domain coverage**: All applicable security domains are included and properly ordered
+
+### 5. Convert Links to Relative Paths
+
+For better compatibility with Microsoft Learn standards, convert all full URLs to relative paths using GitHub Copilot:
+
+1. Open the generated file in VS Code
+2. Open GitHub Copilot Chat
+3. Use this prompt:
+
+```markdown
+Please convert all full Microsoft Learn URLs in this document to relative paths. 
+For example, change:
+- https://learn.microsoft.com/azure/service/feature to /azure/service/feature
+- https://learn.microsoft.com/security/benchmark to /security/benchmark
+- https://learn.microsoft.com/entra/identity to /entra/identity
+
+Make sure to preserve all link text and maintain the exact same markdown formatting.
+```
+
+This step ensures the links follow Microsoft Learn's recommended format for internal references.
+
+### 6. Collaborate with Service PM Team
+
+**IMPORTANT:** As an expert writer, your knowledge is valuable in creating this content. However, partnership with the service PM team ensures technical accuracy:
+
+- **Combine expertise**: Your writing skills and understanding of security principles, paired with the PM team's deep service knowledge
+- **Validate technical details**: Work together to confirm implementation guidance accuracy and current best practices
+- **Enhance completeness**: Identify any missing security recommendations specific to the service
+- **Refine content**: Use your writing expertise to clarify any technical recommendations provided by the service team
+- **Quality assurance**: Jointly review for any potential AI inaccuracies while preserving your writing quality and style
+
+> **Note:** The collaboration between writers and service teams creates the strongest content. Your expertise in security writing combined with their service-specific knowledge ensures accurate, comprehensive guidance.
 
 ---
 
@@ -137,8 +156,9 @@ Generated articles automatically include:
 - **AI-optimized organization**: Structured for optimal parsing by future AI systems
 
 ### Technical Standards
+
 - **Authoritative sources**: Links only to Microsoft Learn documentation
-- **Relative path formatting**: Uses `/azure/service/feature` link format
+- **Link formatting**: Initially uses full URLs (`https://learn.microsoft.com/azure/service/feature`) which are later converted to relative paths (`/azure/service/feature`)
 - **Verified recommendations**: All guidance supported by current Azure capabilities
 - **Domain-appropriate ordering**: Security sections ordered by foundational importance
 

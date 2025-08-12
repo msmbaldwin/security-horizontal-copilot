@@ -6,7 +6,8 @@ ms.author:
 ms.service: <service>
 ms.topic: conceptual
 ms.custom: horz-security
-ms.date: <MM/DD/YYYY>
+ms.date: <today's date in MM/DD/YYYY format>
+ai-usage: ai-assisted
 ---
 
 # Secure your <Azure service name> deployment
