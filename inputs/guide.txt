@@ -35,7 +35,7 @@ Each security recommendation must follow this exact pattern:
 - **Text**: Link text should describe the destination clearly
 - **Sources**: Link only to Microsoft Learn documentation
 - **Currency**: Verify all links point to current, active content
-- **General links**: Use general links from `security-control-links.yml` only when:
+- **General links**: Use general Microsoft Learn links only when:
   - No service-specific documentation exists, OR
   - Additional context is clearly needed to understand or implement the recommendation.
   - If both service-specific and general links are included:
