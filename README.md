@@ -2,7 +2,7 @@
 
 This project generates **initial draft content** for Microsoft Learn's [Security Horizontal initiative](/help/contribute/contribute-security-horizontal). The output is a structured "Secure your <Service>" article that consolidates actionable, service-specific security guidance for Azure services.
 
-> **IMPORTANT:** While these drafts follow Microsoft Learn standards and leverage your expertise as a writer, collaboration with the service PM team is essential to validate technical details and ensure all service-specific security recommendations are accurately represented.
+> **Note:** Generated drafts follow Microsoft Learn standards but should be reviewed with the service PM team to ensure completeness and technical accuracy.
 
 ## 🧰 Prerequisites
 
@@ -61,41 +61,27 @@ Ensure you have:
 
 **Important:** Open the root folder of this repository in VS Code (`File > Open Folder...` and select the `security-horizontal-copilot` folder). This ensures Copilot can correctly find the `input` and `output` directories.
 
-### 2. Prepare for Generation
-
-Copy the entire contents of `input/prompt.txt` to your clipboard. You'll paste and modify this in the GitHub Copilot Chat window in a later step.
-
-### 3. Generate Article
+### 2. Generate Article
 
 1. Open GitHub Copilot Chat in VS Code
 2. Paste the contents of `prompt.txt` into the chat window
-3. Before sending, modify the Service Configuration variables directly in the chat window:
-
-```txt
-**Service Configuration:**
-- `<Service>` = "Azure App Service" (Replace with actual Azure service name)
-- `<Docset>` = https://learn.microsoft.com/en-us/azure/app-service (Replace with service docset URL)
-```
-
+3. Modify the Service Configuration variables directly in the chat window before sending:
+  ```txt
+  **Service Configuration:**
+  - `<Service>` = "Azure App Service" (Replace with actual Azure service name)
+  - `<Docset>` = https://learn.microsoft.com/en-us/azure/app-service (Replace with service docset URL)
+  ```
 4. Send your modified prompt to GitHub Copilot
 
-**Examples of service names:**
-- Azure Kubernetes Service
-- Azure SQL Database  
-- Azure IoT Hub
-
 **Copilot will automatically:**
-- Search Microsoft Learn for service-specific security guidance using the research strategy
-- Follow the exact template structure from `template.txt`
-- Apply writing standards and formatting from `guide.txt`
-- Generate a complete, properly formatted article and save it to `output/secure-<ServiceSlug>.md`
+- Search Microsoft Learn for service-specific security guidance
+- Follow the template structure from `template.txt`
+- Apply writing standards from `guide.txt`
+- Generate a properly formatted article saved to `output/secure-<ServiceSlug>.md` (e.g., `secure-app-service.md`)
 
-**Note:** The prompt will automatically create the output file following the naming convention:
-- `secure-azure-iot-hub.md`
-- `secure-app-service.md` 
-- `secure-kubernetes-service.md`
+> **Note:** I use Claude Sonnet 3.7 to generate my security articles, but you can use any AI model that works well for you. If you find a model that produces especially good results, please share that feedback.
 
-### 4. Review and Validate
+### 3. Review and Validate
 
 After generation, verify:
 
@@ -105,7 +91,7 @@ After generation, verify:
 - **Format consistency**: Bullet points follow the exact pattern from `guide.txt`
 - **Domain coverage**: All applicable security domains are included and properly ordered
 
-### 5. Convert Links to Relative Paths
+### 4. Convert Links to Relative Paths
 
 For better compatibility with Microsoft Learn standards, convert all full URLs to relative paths using GitHub Copilot:
 
@@ -125,17 +111,19 @@ Make sure to preserve all link text and maintain the exact same markdown formatt
 
 This step ensures the links follow Microsoft Learn's recommended format for internal references.
 
-### 6. Collaborate with Service PM Team
+### 5. Loop in the service PM team
 
-**IMPORTANT:** As an expert writer, your knowledge is valuable in creating this content. However, partnership with the service PM team ensures technical accuracy:
+Once you have a quality draft, collaborate with the service PM team to finalize the content:
 
-- **Combine expertise**: Your writing skills and understanding of security principles, paired with the PM team's deep service knowledge
-- **Validate technical details**: Work together to confirm implementation guidance accuracy and current best practices
-- **Enhance completeness**: Identify any missing security recommendations specific to the service
-- **Refine content**: Use your writing expertise to clarify any technical recommendations provided by the service team
-- **Quality assurance**: Jointly review for any potential AI inaccuracies while preserving your writing quality and style
+**IMPORTANT:** The generated article is only a **rough, first draft**. Collaborate with the service PM team to finalize the content:
 
-> **Note:** The collaboration between writers and service teams creates the strongest content. Your expertise in security writing combined with their service-specific knowledge ensures accurate, comprehensive guidance.
+- **Combine expertise**: Merge your security knowledge with the PM team's deep service expertise
+- **Validate technical accuracy**: Confirm all implementation guidance is correct and follows current best practices
+- **Identify gaps**: Discover any missing security recommendations specific to the service
+- **Verify capabilities**: Ensure each security recommendation is actually supported by the service (not hallucinated)
+- **Refine technical content**: Improve explanations based on service team feedback
+- **Eliminate inaccuracies**: Address any AI-generated errors while maintaining quality standards
+- **Prepare for publication**: Finalize the article according to Microsoft Learn requirements
 
 ---
 
@@ -206,6 +194,6 @@ Generated articles automatically include:
 
 ## 📞 Support and Contributions
 
-- **Primary contact**: Matthew Baldwin (`msmbaldwin`)
+- **Primary contact**: Matthew Baldwin (`mbaldwin`)
 - **Contributions**: Pull requests welcome for enhancements to prompts or process
 - **Documentation**: Updates to templates or guides should maintain distinct file roles

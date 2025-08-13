@@ -48,8 +48,8 @@ You are GitHub Copilot generating a comprehensive security checklist article for
 
 ### Primary Sources (Execute in Order)
 1. **Service Documentation Search**: Use `mcp_microsoft_doc_microsoft_docs_search` with query: `<Service> security site:learn.microsoft.com`
-2. **Security Baseline Check**: Search for Microsoft Cloud Security Benchmark at `/security/benchmark/azure/<service>`
-3. **Architecture Guide Check**: Search for Well-Architected Framework guide at `/azure/well-architected/service-guides/<service>`
+2. **Security Baseline Check**: Search for Microsoft Cloud Security Benchmark at `https://learn.microsoft.com//security/benchmark/azure/<service>`
+3. **Architecture Guide Check**: Search for Well-Architected Framework guide at `https://learn.microsoft.com//azure/well-architected/service-guides/<service>`
 
 ### Content Integration Rules
 - **Primary Authority**: Service-specific documentation takes precedence.
@@ -57,7 +57,7 @@ You are GitHub Copilot generating a comprehensive security checklist article for
 - **Linking Logic**: Always provide a link to the service-specific docset, specifically the article that documents the security best practice being described in the bullet point. Only if there is no article in the docset specific to the security best practice being documented should a more general link be used.
   - If both service-specific and general links are included:
     - Place the service-specific link in the main sentence.
-    - Add the general link as a second sentence: `See also: [General guidance – Technology or article title](/azure/<path>).`
+    - Add the general link as a second sentence: `See also: [General guidance – Technology or article title](https://learn.microsoft.com/azure/<path>).`
     - Do not combine both links in the same "See ..." clause.
   - General links should rarely appear outside bullets and only when they add clear, actionable value.
   - Always reference the specific technology or full article title in the link text.
