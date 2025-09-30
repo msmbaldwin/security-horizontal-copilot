@@ -1,6 +1,6 @@
 # Writing Standards: Security Horizontal Articles
 
-This guide defines the specific writing style, tone, and formatting requirements for "Secure your <Service>" articles.
+This guide defines the specific writing style, tone, and formatting requirements for "Secure your <Service>" articles that implements the Zero Trust security principles articulated at /security/zero-trust/zero-trust-overview.
 
 ## Writing Style Requirements
 
@@ -108,6 +108,9 @@ Each security recommendation must follow this exact pattern:
 - Use sentence case for headings
 - Apply consistent formatting throughout
 - Maintain professional, helpful tone
+
+### Metadata Requirements
+- **Required custom tag**: Include `ms.custom: horz-security` in the YAML frontmatter to identify articles as part of the security horizontal content collection
 
 ### Technical Accuracy
 - Use exact Azure service names and feature terminology

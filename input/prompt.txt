@@ -50,6 +50,7 @@ You are GitHub Copilot generating a comprehensive security checklist article for
 1. **Service Documentation Search**: Use `mcp_microsoft_doc_microsoft_docs_search` with query: `<Service> security site:learn.microsoft.com`
 2. **Security Baseline Check**: Search for Microsoft Cloud Security Benchmark at `https://learn.microsoft.com//security/benchmark/azure/<service>`
 3. **Architecture Guide Check**: Search for Well-Architected Framework guide at `https://learn.microsoft.com//azure/well-architected/service-guides/<service>`
+4. **Reliability Guide Check**: Search for Azure Reliability documentation at `https://learn.microsoft.com/en-us/azure/reliability/<service>` to find service-specific reliability guidance relevant to backup and disaster recovery sections
 
 ### Content Integration Rules
 - **Primary Authority**: Service-specific documentation takes precedence.
@@ -83,6 +84,7 @@ You are GitHub Copilot generating a comprehensive security checklist article for
 - No placeholder content or generic boilerplate.
 - Follow `template.txt` structure exactly.
 - Apply `guide.txt` writing guidelines for tone and formatting.
+- **Required metadata**: Include `ms.custom: horz-security` in the YAML frontmatter.
 - **GEO Compliance**: Ensure content is structured for optimal AI parsing and retrieval.
 - **Semantic Consistency**: Use standardized terminology and patterns throughout.
 - **Context Sufficiency**: Each section must be comprehensible without external context.

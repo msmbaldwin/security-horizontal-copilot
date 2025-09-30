@@ -1,0 +1,132 @@
+# Azure Security Documentation Generator
+
+**Service Configuration:**
+- `<Service>` = "Azure Video Indexer" (Replace with Azure service name, e.g., "Azure Key Vault")
+- `<Docset>` = https://learn.microsoft.com/en-us/azure/azure-video-indexer/ (Replace with service docset URL, e.g., "https://learn.microsoft.com/en-us//key-vault/")
+
+**ServiceSlug Inference Rule (MANDATORY):**
+- Automatically derive `<ServiceSlug>` from `<Service>`:
+  1. Convert to lowercase.
+  2. Replace all spaces with `-`.
+  3. Remove all characters except lowercase letters, numbers, and `-`.
+  - Example: "Azure Key Vault" → `azure-key-vault`
+
+**File Output (MANDATORY):**
+- Write the final Markdown to a **new file**: `./output/secure-<ServiceSlug>.md`  
+  Example: `./output/secure-azure-key-vault.md`
+- Overwrite the file if it already exists. Ensure the file contains the complete, ready-to-publish article.
+
+## Generation Instructions
+
+You are GitHub Copilot generating a comprehensive security checklist article for the specified Azure service. Follow Microsoft Learn standards and use the template structure from `template.txt` and writing guidelines from `guide.txt`.
+
+**Objective:** Create **"Secure your <Service> deployment"** — a checklist-style article with validated, service-specific security best practices optimized for both human readers and AI consumption.
+
+## Generative Engine Optimization (GEO)
+
+### AI Parseability Requirements
+- **Structured Data Format**: Use consistent patterns and hierarchical organization for optimal AI parsing
+- **Semantic Clarity**: Include explicit relationships between concepts using standardized language
+- **Context Completeness**: Provide sufficient context in each section for standalone comprehension
+- **Query Optimization**: Structure content to answer common security questions directly
+- **Machine Readability**: Use predictable formatting patterns and clear section delineation
+
+### AI-Optimized Content Patterns
+- **Consistent Bullet Structure**: Follow exact pattern for AI pattern recognition
+- **Explicit Categorization**: Use clear domain headers with consistent terminology
+- **Action-Outcome Pairing**: Link each recommendation to specific security benefits
+- **Progressive Information Architecture**: Order from foundational to advanced concepts
+- **Cross-Reference Integration**: Include relevant links and related concepts for context building
+
+### Metadata Enhancement
+- **Service Taxonomy**: Include clear service classification and relationship indicators
+- **Security Domain Mapping**: Explicitly categorize each recommendation by security domain
+- **Implementation Complexity**: Indicate difficulty/effort level for each recommendation
+- **Compliance Alignment**: Reference relevant standards and frameworks where applicable
+
+## Research Strategy
+
+### Primary Sources (Execute in Order)
+1. **Workspace Documentation Review**: First, explore the workspace folder structure to understand the service documentation available locally. Use `semantic_search`, `grep_search`, and `file_search` tools to identify security-related content, configuration files, and documentation within the workspace.
+2. **Local Documentation Analysis**: Review relevant files in the workspace using `read_file` to understand current security guidance, configurations, and best practices documented locally.
+3. **Service Documentation Search**: Use `mcp_microsoft_doc_microsoft_docs_search` with query: `<Service> security site:learn.microsoft.com`
+4. **Security Baseline Check**: Search for Microsoft Cloud Security Benchmark at `https://learn.microsoft.com//security/benchmark/azure/<service>`
+5. **Architecture Guide Check**: Search for Well-Architected Framework guide at `https://learn.microsoft.com//azure/well-architected/service-guides/<service>`
+6. **Reliability Guide Check**: Search for Azure Reliability documentation at `https://learn.microsoft.com/en-us/azure/reliability/<service>` to find service-specific reliability guidance relevant to backup and disaster recovery sections
+
+### Content Integration Rules
+- **Primary Authority**: Local workspace documentation takes precedence, followed by service-specific Microsoft Learn documentation.
+- **Supporting Evidence**: Include MCSB/WAF only when it aligns with current service docs and workspace content.
+- **Linking Logic**: Always provide a link to the service-specific docset, specifically the article that documents the security best practice being described in the bullet point. Only if there is no article in the docset specific to the security best practice being documented should a more general link be used.
+  - If both service-specific and general links are included:
+    - Place the service-specific link in the main sentence.
+    - Add the general link as a second sentence: `See also: [General guidance – Technology or article title](https://learn.microsoft.com/azure/<path>).`
+    - Do not combine both links in the same "See ..." clause.
+  - General links should rarely appear outside bullets and only when they add clear, actionable value.
+  - Always reference the specific technology or full article title in the link text.
+  - Never replace a service-specific link with a general one.
+- **Validation Requirement**: All recommendations must be supported by current Microsoft Learn content.
+- **Specificity Filter**: Include only recommendations that apply directly to the target service.
+- **AI Accessibility**: Structure content for optimal consumption by language models and copilots.
+
+## Content Requirements
+
+### Security Domains (Include Only Applicable)
+- **Network Security** — Isolation, filtering, endpoint protection
+- **Identity & Access Management** — Authentication, authorization, RBAC
+- **Data Protection** — Encryption, key management, classification
+- **Logging & Monitoring** — Audit trails, threat detection, alerts
+- **Compliance & Governance** — Policy enforcement, regulatory compliance
+- **Backup & Recovery** — Data protection, business continuity
+- **Service-Specific Security** — Unique security controls for this service
+
+### Quality Standards
+- Every recommendation must link to authoritative Microsoft documentation.
+- Use full URLs.
+- No placeholder content or generic boilerplate.
+- Follow `template.txt` structure exactly.
+- Apply `guide.txt` writing guidelines for tone and formatting.
+- **Required metadata**: Include `ms.custom: horz-security` in the YAML frontmatter.
+- **GEO Compliance**: Ensure content is structured for optimal AI parsing and retrieval.
+- **Semantic Consistency**: Use standardized terminology and patterns throughout.
+- **Context Sufficiency**: Each section must be comprehensible without external context.
+
+### AI-Optimized Formatting Requirements
+- **Predictable Structure**: Maintain consistent section ordering and bullet formatting.
+- **Explicit Relationships**: Use clear language to indicate dependencies and relationships.
+- **Searchable Content**: Include relevant keywords naturally within context.
+- **Hierarchical Organization**: Organize information from general to specific.
+- **Cross-Reference Clarity**: Make relationships between sections explicit.
+
+## Execution Process
+
+1. **Workspace Discovery Phase**: Explore the workspace folder structure to identify relevant documentation, security content, and configuration files related to the service.
+2. **Local Content Analysis Phase**: Review workspace files to understand current security guidance, best practices, and service-specific configurations.
+3. **External Research Phase**: Search Microsoft Learn for additional service-specific security guidance using the strategy above.
+4. **Content Generation**: Build the article following `template.txt` and `guide.txt`, incorporating both workspace insights and external documentation.
+5. **GEO Optimization**: Structure content for optimal AI parsing and human readability.
+6. **Validation Phase**: 
+  - Verify each recommendation has explicit documentation reference (workspace or external)
+  - Confirm all security guidance is current and not deprecated
+  - Ensure recommendations are specifically applicable to the target service
+  - Validate content follows AI-accessible patterns defined in GEO requirements
+
+7. **Link Verification**:
+  - Verify all URLs resolve to valid Microsoft Learn documentation pages
+  - Ensure each link points to the most specific documentation for the recommendation
+  - Check that no placeholder or incomplete URLs remain in the document
+
+8. **File Output**:
+  - Apply the ServiceSlug Inference Rule to convert <Service> to <ServiceSlug>
+  - Create the ./output directory if it doesn't exist
+  - Write the complete, formatted Markdown to ./output/secure-<ServiceSlug>.md
+  - Do not modify the current document or any template files
+
+**Additional GEO Validation Criteria:**
+- Content follows predictable patterns for AI pattern recognition.
+- Each recommendation includes explicit action–benefit relationships.
+- Section introductions provide clear context and scope.
+- Links and references support both human navigation and AI context building.
+- Terminology remains consistent for semantic clarity.
+
+**Begin research and generation now.**
