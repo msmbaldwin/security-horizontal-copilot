@@ -9,6 +9,7 @@ This project generates **initial draft content** for Microsoft Learn's [Security
 - **GitHub Copilot** (Agent Mode enabled)
 - **Microsoft Docs Plugin** (`mcp_microsoft_doc_microsoft_docs_search` access)
 - **VS Code** with Copilot extension
+- **Access to service docset** (optional but recommended for workspace analysis)
 
 **Install the Docs plugin:** See [MicrosoftDocs/mcp](https://github.com/MicrosoftDocs/mcp)
 
@@ -59,7 +60,13 @@ Ensure you have:
 - Microsoft Docs plugin installed and functional
 - This repository open as your workspace
 
-**Important:** Open the root folder of this repository in VS Code (`File > Open Folder...` and select the `security-horizontal-copilot` folder). This ensures Copilot can correctly find the `input` and `output` directories.
+**Important workspace setup:**
+1. Open the root folder of this repository in VS Code (`File > Open Folder...` and select the `security-horizontal-copilot` folder). This ensures Copilot can correctly find the `input` and `output` directories.
+
+2. **Optional but recommended**: Add the service docset to your workspace for enhanced local analysis:
+   - If you have access to a local copy of the service documentation (e.g., cloned from `azure-docs-pr` or similar repository)
+   - Use `File > Add Folder to Workspace...` to add the docset folder
+   - This enables Copilot to analyze existing security documentation and configurations locally before searching external sources
 
 ### 2. Generate Article
 
@@ -74,7 +81,9 @@ Ensure you have:
 4. Send your modified prompt to GitHub Copilot
 
 **Copilot will automatically:**
-- Search Microsoft Learn for service-specific security guidance
+- Explore workspace folders for local documentation and security content
+- Analyze existing service documentation and configurations in the workspace
+- Search Microsoft Learn for additional service-specific security guidance
 - Follow the template structure from `template.txt`
 - Apply writing standards from `guide.txt`
 - Generate a properly formatted article saved to `output/secure-<ServiceSlug>.md` (e.g., `secure-app-service.md`)
@@ -155,9 +164,10 @@ Generated articles automatically include:
 ## 🔧 Process Optimization Features
 
 ### Intelligent Research Strategy
+- **Workspace-first approach**: Analyzes local documentation and configurations before external searches
 - **Systematic search**: Automated Microsoft Learn searches using specific query patterns
-- **Source prioritization**: Service docs → Security baselines → Architecture guides
-- **Content validation**: Verification against current Microsoft documentation
+- **Source prioritization**: Local workspace docs → Service docs → Security baselines → Architecture guides
+- **Content validation**: Verification against current Microsoft documentation and workspace content
 
 ### Multi-Purpose Design
 - **Human-readable**: Clear, actionable guidance for security engineers
@@ -177,8 +187,9 @@ Generated articles automatically include:
 
 ### Context Management
 - **Load all files**: Always open the three prompt files before generating
+- **Workspace setup**: Add service docset folders to workspace for enhanced local analysis
 - **Service specificity**: Use exact Azure service names for better research results
-- **Documentation verification**: Let Copilot search thoroughly using the Docs plugin
+- **Documentation verification**: Let Copilot analyze workspace content first, then search external sources
 
 ### Generation Process
 - **Single service focus**: Generate one service article at a time for best results
@@ -188,6 +199,7 @@ Generated articles automatically include:
 ### Quality Validation
 - **Link verification**: Check that all documentation links are current and relevant
 - **Specificity check**: Verify recommendations are service-specific, not generic
+- **Workspace alignment**: Ensure recommendations align with existing configurations in workspace
 - **Implementation testing**: Ensure recommendations are technically feasible
 
 ---
