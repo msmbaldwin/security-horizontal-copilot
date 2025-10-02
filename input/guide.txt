@@ -1,6 +1,6 @@
 # Writing Standards: Security Horizontal Articles
 
-This guide defines the specific writing style, tone, and formatting requirements for "Secure your <Service>" articles.
+This guide defines the specific writing style, tone, and formatting requirements for "Secure your <Service>" articles that implements the Zero Trust security principles articulated at /security/zero-trust/zero-trust-overview.
 
 ## Writing Style Requirements
 
@@ -90,11 +90,13 @@ Each security recommendation must follow this exact pattern:
 - Include only recommendations that apply directly to the target service
 - Avoid generic security advice that applies to all Azure services
 - Ensure each recommendation addresses service-specific risks or capabilities
+- Prioritize recommendations that align with existing service documentation and configurations in the workspace
 
 ### Evidence Requirements
 - Every recommendation must link to official Microsoft Learn documentation
-- Base all guidance on current, published documentation
+- Base all guidance on current, published documentation and workspace content when available
 - Verify that linked documentation supports the specific recommendation
+- Ensure recommendations align with existing configurations and documentation in the workspace
 
 ### Actionability Standards
 - Provide specific implementation steps, not vague suggestions
@@ -109,12 +111,16 @@ Each security recommendation must follow this exact pattern:
 - Apply consistent formatting throughout
 - Maintain professional, helpful tone
 
+### Metadata Requirements
+- **Required custom tag**: Include `ms.custom: horz-security` in the YAML frontmatter to identify articles as part of the security horizontal content collection
+
 ### Technical Accuracy
 - Use exact Azure service names and feature terminology
-- Verify technical accuracy of all recommendations
-- Ensure compatibility with current Azure capabilities
+- Verify technical accuracy of all recommendations against both external documentation and workspace content
+- Ensure compatibility with current Azure capabilities and existing configurations
 - [ ] No placeholder content remains
 - [ ] Formatting is consistent throughout
 - [ ] Links use full URLs
 - [ ] Content is optimized for AI parsing
 - [ ] Article structure matches template
+- [ ] Recommendations align with workspace documentation when available

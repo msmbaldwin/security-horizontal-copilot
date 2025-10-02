@@ -47,13 +47,16 @@ You are GitHub Copilot generating a comprehensive security checklist article for
 ## Research Strategy
 
 ### Primary Sources (Execute in Order)
-1. **Service Documentation Search**: Use `mcp_microsoft_doc_microsoft_docs_search` with query: `<Service> security site:learn.microsoft.com`
-2. **Security Baseline Check**: Search for Microsoft Cloud Security Benchmark at `https://learn.microsoft.com//security/benchmark/azure/<service>`
-3. **Architecture Guide Check**: Search for Well-Architected Framework guide at `https://learn.microsoft.com//azure/well-architected/service-guides/<service>`
+1. **Workspace Documentation Review**: First, explore the workspace folder structure to understand the service documentation available locally. Use `semantic_search`, `grep_search`, and `file_search` tools to identify security-related content, configuration files, and documentation within the workspace.
+2. **Local Documentation Analysis**: Review relevant files in the workspace using `read_file` to understand current security guidance, configurations, and best practices documented locally.
+3. **Service Documentation Search**: Use `mcp_microsoft_doc_microsoft_docs_search` with query: `<Service> security site:learn.microsoft.com`
+4. **Security Baseline Check**: Search for Microsoft Cloud Security Benchmark at `https://learn.microsoft.com//security/benchmark/azure/<service>`
+5. **Architecture Guide Check**: Search for Well-Architected Framework guide at `https://learn.microsoft.com//azure/well-architected/service-guides/<service>`
+6. **Reliability Guide Check**: Search for Azure Reliability documentation at `https://learn.microsoft.com/en-us/azure/reliability/<service>` to find service-specific reliability guidance relevant to backup and disaster recovery sections
 
 ### Content Integration Rules
-- **Primary Authority**: Service-specific documentation takes precedence.
-- **Supporting Evidence**: Include MCSB/WAF only when it aligns with current service docs.
+- **Primary Authority**: Local workspace documentation takes precedence, followed by service-specific Microsoft Learn documentation.
+- **Supporting Evidence**: Include MCSB/WAF only when it aligns with current service docs and workspace content.
 - **Linking Logic**: Always provide a link to the service-specific docset, specifically the article that documents the security best practice being described in the bullet point. Only if there is no article in the docset specific to the security best practice being documented should a more general link be used.
   - If both service-specific and general links are included:
     - Place the service-specific link in the main sentence.
@@ -83,6 +86,7 @@ You are GitHub Copilot generating a comprehensive security checklist article for
 - No placeholder content or generic boilerplate.
 - Follow `template.txt` structure exactly.
 - Apply `guide.txt` writing guidelines for tone and formatting.
+- **Required metadata**: Include `ms.custom: horz-security` in the YAML frontmatter.
 - **GEO Compliance**: Ensure content is structured for optimal AI parsing and retrieval.
 - **Semantic Consistency**: Use standardized terminology and patterns throughout.
 - **Context Sufficiency**: Each section must be comprehensible without external context.
@@ -96,21 +100,23 @@ You are GitHub Copilot generating a comprehensive security checklist article for
 
 ## Execution Process
 
-1. **Research Phase**: Search Microsoft Learn for service-specific security guidance using the strategy above.
-2. **Content Generation**: Build the article following `template.txt` and `guide.txt`.
-3. **GEO Optimization**: Structure content for optimal AI parsing and human readability.
-4. **Validation Phase**: 
-  - Verify each recommendation has explicit documentation reference
+1. **Workspace Discovery Phase**: Explore the workspace folder structure to identify relevant documentation, security content, and configuration files related to the service.
+2. **Local Content Analysis Phase**: Review workspace files to understand current security guidance, best practices, and service-specific configurations.
+3. **External Research Phase**: Search Microsoft Learn for additional service-specific security guidance using the strategy above.
+4. **Content Generation**: Build the article following `template.txt` and `guide.txt`, incorporating both workspace insights and external documentation.
+5. **GEO Optimization**: Structure content for optimal AI parsing and human readability.
+6. **Validation Phase**: 
+  - Verify each recommendation has explicit documentation reference (workspace or external)
   - Confirm all security guidance is current and not deprecated
   - Ensure recommendations are specifically applicable to the target service
   - Validate content follows AI-accessible patterns defined in GEO requirements
 
-5. **Link Verification**:
+7. **Link Verification**:
   - Verify all URLs resolve to valid Microsoft Learn documentation pages
   - Ensure each link points to the most specific documentation for the recommendation
   - Check that no placeholder or incomplete URLs remain in the document
 
-6. **File Output**:
+8. **File Output**:
   - Apply the ServiceSlug Inference Rule to convert <Service> to <ServiceSlug>
   - Create the ./output directory if it doesn't exist
   - Write the complete, formatted Markdown to ./output/secure-<ServiceSlug>.md

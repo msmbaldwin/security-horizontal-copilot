@@ -14,7 +14,9 @@ ai-usage: ai-assisted
 
 <Azure service> provides capabilities to <briefly describe what the service does>. When deploying this service, it's important to follow security best practices to protect data, configurations, and infrastructure.
 
-This article provides guidance on how to best secure your Azure <service name> deployment.
+[!INCLUDE [Security horizontal Zerto Trust statement](~/reusable-content/ce-skilling/azure/includes/security/zero-trust-security-horizontal.md)]
+
+This article provides security recommendations to help protect your Azure <service name> deployment.
 
 ## Network security
 
