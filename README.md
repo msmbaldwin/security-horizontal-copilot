@@ -20,10 +20,11 @@ This project generates **initial draft content** for Microsoft Learn's [Security
 ```
 security-horizontal-copilot/
 ├── input/
-│   ├── prompt.txt       # Generation instructions and research strategy
-│   ├── template.txt     # Article structure and Markdown template
-│   └── guide.txt        # Writing standards and formatting requirements
-├── output/              # Generated security articles
+│   ├── prompt-generate.txt  # Generation instructions and research strategy
+│   ├── prompt-validate.txt  # Validation instructions for service specificity
+│   ├── template.txt         # Article structure and Markdown template
+│   └── guide.txt            # Writing standards and formatting requirements
+├── output/                  # Generated security articles
 └── README.md
 ```
 
@@ -31,11 +32,17 @@ security-horizontal-copilot/
 
 **Each file has a distinct, focused purpose:**
 
-- **`prompt.txt`**: 
+- **`prompt-generate.txt`**: 
   - Core generation instructions and research methodology
   - Service configuration variables
   - Quality standards and execution process
   - Research strategy using Microsoft Docs plugin
+
+- **`prompt-validate.txt`**: 
+  - Systematic validation instructions for service specificity
+  - Deep technical accuracy verification process
+  - Implementation-specific validation requirements
+  - Documentation validation criteria
 
 - **`template.txt`**: 
   - Exact article structure and Markdown formatting
@@ -71,7 +78,7 @@ Ensure you have:
 ### 2. Generate Article
 
 1. Open GitHub Copilot Chat in VS Code
-2. Paste the contents of `prompt.txt` into the chat window
+2. Paste the contents of `prompt-generate.txt` into the chat window
 3. Modify the Service Configuration variables directly in the chat window before sending:
   ```txt
   **Service Configuration:**
@@ -100,7 +107,30 @@ After generation, verify:
 - **Format consistency**: Bullet points follow the exact pattern from `guide.txt`
 - **Domain coverage**: All applicable security domains are included and properly ordered
 
-### 4. Convert Links to Relative Paths
+
+### 5. Optional: Validate Service Specificity (Recommended)
+
+For additional quality assurance, you can perform a systematic validation of all recommendations to ensure service specificity and documentation accuracy. This is especially recommended for complex services or when you want to verify the generated content is fully accurate.
+
+**Validation Prompt:** Use the contents of `prompt-validate.txt` in GitHub Copilot Chat, modifying the service configuration at the top:
+
+**Example usage:**
+1. **Start a fresh chat session**: Clear your current Copilot Chat or open a new chat window to avoid carrying over any potentially incorrect context from the generation phase
+2. Select all content in your generated article  
+3. Open the new GitHub Copilot Chat session
+4. Copy the contents of `prompt-validate.txt` and modify the **Service Configuration** section:
+   - Replace `"XXX"` with your service name (e.g., `"Azure Key Vault"`)
+   - Replace the docset URL with your service's documentation URL (e.g., `https://learn.microsoft.com/en-us/azure/key-vault`)
+5. Send the modified prompt to Copilot
+6. Review and apply any corrections Copilot identifies
+
+This validation step helps catch:
+- Generic recommendations that don't apply to your specific service
+- Incorrect documentation links or references to non-existent features  
+- Missing service-specific security capabilities
+- Technical inaccuracies in implementation guidance
+
+### 5. Convert Links to Relative Paths
 
 For better compatibility with Microsoft Learn standards, convert all full URLs to relative paths using GitHub Copilot:
 
@@ -120,7 +150,7 @@ Make sure to preserve all link text and maintain the exact same markdown formatt
 
 This step ensures the links follow Microsoft Learn's recommended format for internal references.
 
-### 5. Loop in the service PM team
+### 6. Loop in the service PM team
 
 Once you have a quality draft, collaborate with the service PM team to finalize the content:
 

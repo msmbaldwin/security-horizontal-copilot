@@ -1,8 +1,8 @@
 # Azure Security Documentation Generator
 
 **Service Configuration:**
-- `<Service>` = "XXX" (Replace with Azure service name, e.g., "Azure Key Vault")
-- `<Docset>` = https://learn.microsoft.com/XXX (Replace with service docset URL, e.g., "https://learn.microsoft.com/en-us//key-vault/")
+- `<Service>` = "Azure Files" (Replace with Azure service name, e.g., "Azure Key Vault")
+- `<Docset>` = https://learn.microsoft.com/en-us/azure/storage/files/ (Replace with service docset URL, e.g., "https://learn.microsoft.com/en-us//key-vault/")
 
 **ServiceSlug Inference Rule (MANDATORY):**
 - Automatically derive `<ServiceSlug>` from `<Service>`:
@@ -105,11 +105,44 @@ You are GitHub Copilot generating a comprehensive security checklist article for
 3. **External Research Phase**: Search Microsoft Learn for additional service-specific security guidance using the strategy above.
 4. **Content Generation**: Build the article following `template.txt` and `guide.txt`, incorporating both workspace insights and external documentation.
 5. **GEO Optimization**: Structure content for optimal AI parsing and human readability.
-6. **Validation Phase**: 
-  - Verify each recommendation has explicit documentation reference (workspace or external)
-  - Confirm all security guidance is current and not deprecated
-  - Ensure recommendations are specifically applicable to the target service
-  - Validate content follows AI-accessible patterns defined in GEO requirements
+6. **Deep Validation Phase** - Apply rigorous validation during generation:
+
+**For each recommendation before including it, verify:**
+
+a) **Service Applicability & Architecture Understanding**: 
+   - Does the security control apply specifically to `<Service>` and its actual deployment model?
+   - **How exactly does `<Service>` implement this feature?** (e.g., does it deploy into customer VNets, or only support it via private endpoints?)
+   - Is this generic Azure advice or truly service-specific guidance?
+   - Does the service's architecture support this security control in the way described?
+
+b) **Implementation-Specific Validation**: 
+   - **What are the specific prerequisites** for implementing this recommendation with `<Service>`?
+   - **What are the limitations or constraints** when using this feature with `<Service>`?
+   - Are there service-specific steps or configurations required?
+   - Does the recommendation correctly describe the relationship between `<Service>` and other Azure services involved?
+
+c) **Documentation Validation**: Each recommendation must link to official Microsoft Learn documentation that:
+   - Is specific to `<Service>` (preferred from `<Docset>`)
+   - Actually supports the exact recommendation being made **in the context described**
+   - Provides concrete implementation guidance for `<Service>` specifically
+   - Uses current, non-deprecated features
+   - Explains any service-specific limitations or requirements
+
+d) **Technical Accuracy & Context**: 
+   - The recommendation describes features and configurations that actually exist for `<Service>`
+   - **The implementation context is accurately described** (e.g., "NSGs for subnets hosting private endpoints" vs "NSGs for the service directly")
+   - No capabilities from other Azure services are incorrectly attributed to `<Service>`
+   - Service-specific constraints and dependencies are properly explained
+
+**Exclude recommendations that:**
+- **Assume VNet deployment** when `<Service>` doesn't support it
+- **Describe security controls that only work through specific mechanisms** without clearly stating this
+- **Apply generic Azure features** incorrectly to `<Service>` without proper architectural context
+- **Reference authentication/authorization methods** `<Service>` doesn't actually support or supports with limitations
+- **Claim monitoring/logging capabilities** that aren't available for `<Service>` or work differently than described
+- **Suggest backup/disaster recovery features** that don't exist for `<Service>` or have service-specific implementations
+
+**Critical Generation Rule**: For each potential recommendation, ask "How exactly does this work with `<Service>`?" If you cannot find service-specific documentation that clearly explains the implementation, do not include the recommendation.
 
 7. **Link Verification**:
   - Verify all URLs resolve to valid Microsoft Learn documentation pages
@@ -129,4 +162,13 @@ You are GitHub Copilot generating a comprehensive security checklist article for
 - Links and references support both human navigation and AI context building.
 - Terminology remains consistent for semantic clarity.
 
-**Begin research and generation now.**
+**Enhanced Generation Methodology:**
+Before including any recommendation, use `mcp_microsoft_doc_microsoft_docs_search` to research:
+1. **Service-specific implementation details** - How does `<Service>` actually implement this security control?
+2. **Architectural constraints** - What deployment models does `<Service>` support?
+3. **Feature availability** - Does `<Service>` actually support this capability as described?
+4. **Implementation requirements** - What are the specific steps and prerequisites for `<Service>`?
+
+Only include recommendations where you can find clear, service-specific documentation that explains the implementation details. When in doubt about architectural compatibility, exclude the recommendation rather than risk providing incorrect guidance.
+
+**Begin research and generation now using this enhanced validation methodology.**
