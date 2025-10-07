@@ -1,0 +1,60 @@
+# Security Article Validation
+
+**Service Configuration:**
+- `<Service>` = "XXX" (Replace with your Azure service name)
+- `<Docset>` = https://learn.microsoft.com/XXX (Replace with your service docset URL)
+
+## Validation Instructions
+
+Systematically review and validate every security recommendation in the currently open article to ensure service specificity and documentation accuracy. Apply all corrections directly to the open article by editing the file. 
+
+**CRITICAL**: For each recommendation, don't just verify the feature exists - understand HOW it works with the specific service architecture.
+
+For each recommendation, verify that:
+
+1. **Service Applicability & Architecture Understanding**: 
+   - Does the security control apply specifically to `<Service>` and its actual deployment model?
+   - **How exactly does `<Service>` implement this feature?** (e.g., does it deploy into customer VNets, or only support it via private endpoints?)
+   - Is this generic Azure advice or truly service-specific guidance?
+   - Does the service's architecture support this security control in the way described?
+
+2. **Implementation-Specific Validation**: 
+   - **What are the specific prerequisites** for implementing this recommendation with `<Service>`?
+   - **What are the limitations or constraints** when using this feature with `<Service>`?
+   - Are there service-specific steps or configurations required that aren't mentioned?
+   - Does the recommendation correctly describe the relationship between `<Service>` and other Azure services involved?
+
+3. **Documentation Validation**: Each recommendation must link to official Microsoft Learn documentation that:
+   - Is specific to `<Service>` (preferred from `<Docset>`)
+   - Actually supports the exact recommendation being made **in the context described**
+   - Provides concrete implementation guidance for `<Service>` specifically
+   - Uses current, non-deprecated features
+   - Explains any service-specific limitations or requirements
+
+4. **Technical Accuracy & Context**: 
+   - The recommendation describes features and configurations that actually exist for `<Service>`
+   - **The implementation context is accurately described** (e.g., "NSGs for subnets hosting private endpoints" vs "NSGs for the service directly")
+   - No capabilities from other Azure services are incorrectly attributed to `<Service>`
+   - Service-specific constraints and dependencies are properly explained
+
+**Deep Validation Process**: Go through every single recommendation systematically using Microsoft Learn documentation search to:
+- **Question the implementation details**: How exactly does this work with `<Service>`?
+- **Verify architectural compatibility**: Does `<Service>`'s deployment model support this recommendation as described?
+- **Check for missing context**: Are there important prerequisites, limitations, or dependencies not mentioned?
+- **Validate documentation links** point to appropriate service-specific content that supports the exact implementation described
+- **Fix or remove any recommendations that are too generic, architecturally incompatible, or incorrectly described**
+- **Ensure no placeholder content or broken links remain**
+- **Add necessary context** about service-specific implementation requirements or limitations
+
+Focus especially on identifying and correcting:
+- **Networking recommendations that assume VNet deployment** when `<Service>` doesn't support it
+- **Security controls that only work through specific mechanisms** (e.g., only via private endpoints) but don't clearly state this
+- **Generic Azure features incorrectly described** as applying directly to `<Service>` when they require specific architectural patterns
+- **Authentication/authorization methods** `<Service>` doesn't actually support or supports with limitations  
+- **Monitoring/logging capabilities** that aren't available for `<Service>` or work differently than described
+- **Backup/disaster recovery features** that don't exist for `<Service>` or have service-specific implementations
+- **Missing service-specific context** about how standard Azure features integrate with `<Service>`
+
+**Execution**: After validation, make the necessary changes directly to the open security article file. Apply corrections, improvements, and fixes identified during the validation process.
+
+The goal is to ensure every recommendation is verifiably accurate, service-specific to `<Service>`, and properly documented with links to `<Docset>` or other authoritative Microsoft Learn sources.
