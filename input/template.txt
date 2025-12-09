@@ -78,7 +78,9 @@ This article provides security recommendations to help protect your Azure <servi
 
 ## Next steps
 
-- [Microsoft Cloud Security Benchmark – <Service>](https://learn.microsoft.com/security/benchmark/azure/<service>)
-- [Well-Architected Framework – <Service> guide](https://learn.microsoft.com/azure/well-architected/service-guides/<service>)
-- [Security documentation for <Service>](https://learn.microsoft.com/azure/<service>/security/)
-  See also: [Azure Security Documentation](https://learn.microsoft.com/azure/security/). <!-- Example of sparing general link usage -->
+- [Microsoft Cloud Security Benchmark - <service> baseline](https://learn.microsoft.com/security/benchmark/azure/baselines/<service>-security-baseline) // if exists
+- [Well-Architected Framework – <Service> guide](https://learn.microsoft.com/azure/well-architected/service-guides/<service>) // if exists
+- [Zero Trust guidance center](https://learn.microsoft.com/en-us/security/zero-trust/zero-trust-overview)
+- [Microsoft Cloud Security Benchmark v2 (preview)](https://learn.microsoft.com/security/benchmark/azure/overview)
+- [Secure Future Initiative patterns & practices library](https://learn.microsoft.com/security/zero-trust/sfi/integrate-nist-2-governance) // if exists
+- [Azure Security Documentation](https://learn.microsoft.com/azure/security/). <!-- Example of sparing general link usage -->

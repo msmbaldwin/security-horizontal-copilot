@@ -114,3 +114,11 @@ Container Apps provides unique security capabilities designed specifically for c
 
 - **Implement proper scaling and resource limits**: Configure appropriate scaling rules and resource limits to prevent resource exhaustion attacks and ensure fair resource allocation among applications. Monitor scaling events for unusual patterns that might indicate security issues. See [Set scaling rules in Azure Container Apps](/azure/container-apps/scale-app).
 
+## Next steps
+
+- [Microsoft Cloud Security Benchmark - Azure Container Apps baseline](https://learn.microsoft.com/security/benchmark/azure/baselines/azure-container-apps-security-baseline)
+- [Well-Architected Framework – Azure Container Apps guide](https://learn.microsoft.com/azure/well-architected/service-guides/azure-container-apps)
+- [Zero Trust guidance center](https://learn.microsoft.com/security/zero-trust/zero-trust-overview)
+- [Microsoft Cloud Security Benchmark v2 (preview)](https://learn.microsoft.com/security/benchmark/azure/overview)
+- [Azure Security Documentation](https://learn.microsoft.com/azure/security/)
+
