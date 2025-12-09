@@ -6,7 +6,7 @@ ms.author:
 ms.service: azure-container-apps
 ms.topic: conceptual
 ms.custom: horz-security
-ms.date: 09/29/2025
+ms.date: 12/08/2025
 ai-usage: ai-assisted
 ---
 
@@ -14,7 +14,9 @@ ai-usage: ai-assisted
 
 Azure Container Apps provides capabilities to run containerized applications without managing complex infrastructure while providing enterprise-grade security features. When deploying this service, it's important to follow security best practices to protect data, configurations, and infrastructure.
 
-This article provides guidance on how to best secure your Azure Container Apps deployment.
+[!INCLUDE [Security horizontal Zero Trust statement](~/reusable-content/ce-skilling/azure/includes/security/zero-trust-security-horizontal.md)]
+
+This article provides security recommendations to help protect your Azure Container Apps deployment.
 
 ## Network security
 
@@ -31,6 +33,8 @@ Network security controls prevent unauthorized access to container app endpoints
 - **Implement Azure Firewall for outbound traffic control**: Use Azure Firewall with user-defined routes (UDR) to control and monitor all outbound traffic from your container apps to ensure communication only occurs with approved destinations. See [Enable User Defined Routes (UDR)](/azure/container-apps/user-defined-routes).
 
 - **Configure Network Security Groups with restrictive rules**: Apply Network Security Groups to control traffic flow to and from your Container Apps subnets by implementing deny-by-default policies with specific allow rules for required communication patterns. See [Securing a existing VNet with an NSG](/azure/container-apps/firewall-integration).
+
+- **Implement proper ingress security**: Configure ingress settings with appropriate security controls including client certificate authentication, IP restrictions, and traffic splitting for secure exposure of container applications. Use internal ingress for applications that should not be accessible from the internet. See [Ingress overview](/azure/container-apps/ingress-overview).
 
 ## Identity and access management
 
@@ -80,7 +84,7 @@ Compliance and governance controls ensure Container Apps deployments meet regula
 
 - **Apply Azure Policy definitions**: Use built-in Azure Policy definitions to audit and enforce security configurations such as virtual network deployment, authentication requirements, and HTTPS enforcement. Policies help maintain consistent security posture across environments. See [Azure Policy built-in definitions for Azure Container Apps](/azure/container-apps/policy-reference).
 
-- **Enable Microsoft Defender for Cloud monitoring**: Use Defender for Cloud to provide security assessments, vulnerability scanning, and configuration recommendations for container apps and their dependencies. This provides continuous security posture monitoring and threat detection. See [Architecture best practices for Azure Container Apps](/azure/well-architected/service-guides/azure-container-apps).
+
 
 - **Implement resource tagging**: Apply consistent resource tags to Container Apps resources for cost management, security monitoring, compliance tracking, and governance. Use tags to identify data classification, owner information, and regulatory requirements. See [Azure security baseline for Azure Container Apps](/security/benchmark/azure/baselines/azure-container-apps-security-baseline).
 
@@ -106,15 +110,7 @@ Backup and recovery strategies protect container app configurations and ensure b
 
 Container Apps provides unique security capabilities designed specifically for containerized workloads, microservices architectures, and cloud-native applications.
 
-- **Configure Dapr security components**: When using Dapr integration, implement proper security controls including component access policies, secret scoping, and service-to-service authentication. Use Dapr security features to control access to state stores, pub/sub systems, and external services. See [Microservice APIs powered by Dapr](/azure/container-apps/dapr-overview).
-
-- **Implement proper ingress security**: Configure ingress settings with appropriate security controls including client certificate authentication, IP restrictions, and traffic splitting for secure exposure of container applications. Use internal ingress for applications that should not be accessible from the internet. See [Ingress overview](/azure/container-apps/ingress-overview).
-
-- **Use container console access controls**: Restrict access to the container console feature to authorized personnel only and monitor console access for security purposes. Disable console access in production environments when not required for operational needs. See [Container console](/azure/container-apps/container-console).
-
 - **Configure environment-level security boundaries**: Use Container Apps environments to create security boundaries between different applications and workloads. Separate production and non-production environments to prevent unauthorized access and configuration drift. See [Environment overview](/azure/container-apps/environment).
 
 - **Implement proper scaling and resource limits**: Configure appropriate scaling rules and resource limits to prevent resource exhaustion attacks and ensure fair resource allocation among applications. Monitor scaling events for unusual patterns that might indicate security issues. See [Set scaling rules in Azure Container Apps](/azure/container-apps/scale-app).
-
-- **Secure revision management**: Use Container Apps revision management with proper controls to ensure secure deployments and rollback capabilities. Implement blue-green deployments and traffic splitting for safe application updates without service disruption. See [Application lifecycle management in Azure Container Apps](/azure/container-apps/application-lifecycle-management).
 
