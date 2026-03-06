@@ -1,0 +1,519 @@
+# Policy Extraction Prototype: Azure Key Vault
+# Source: output/secure-azure-key-vault.md
+# Generated: 2026-02-20
+# Status: PROTOTYPE - testing extraction feasibility
+
+service: azure-key-vault
+security_article: /azure/key-vault/general/secure-key-vault.md
+extraction_date: 2026-02-20
+extraction_confidence: high  # Most rules have clear CLI/PowerShell mappings
+
+# ============================================================================
+# EXTRACTED RULES
+# ============================================================================
+
+rules:
+
+  # --------------------------------------------------------------------------
+  # SERVICE-SPECIFIC SECURITY - KEY VAULT ARCHITECTURE
+  # --------------------------------------------------------------------------
+  
+  - id: KV-ARCH-001
+    type: prose
+    source_section: "Service-specific security > Key vault architecture"
+    recommendation: "Create separate key vaults per application, region, and environment"
+    detection:
+      when_topic: "key vault create|new vault|provision vault"
+      should_mention:
+        - "separate vault"
+        - "per environment"
+        - "dev|test|prod"
+    severity: low
+    notes: "Hard to enforce in code; mostly prose guidance"
+    
+  - id: KV-ARCH-002
+    type: prose
+    source_section: "Service-specific security > Key vault architecture"
+    recommendation: "Use separate key vaults per tenant in multitenant solutions"
+    detection:
+      when_topic: "multitenant|saas|tenant isolation"
+      should_mention: "separate vault per tenant"
+    severity: medium
+    notes: "Architecture guidance; applies to design docs"
+
+  - id: KV-ARCH-003
+    type: configuration
+    source_section: "Service-specific security > Key vault architecture"
+    recommendation: "Choose the appropriate tier (Standard vs Premium vs Managed HSM)"
+    detection:
+      when_creating: "key vault"
+      should_mention: "tier|sku|premium|hsm"
+    severity: low
+    notes: "Informational; tier choice is context-dependent"
+
+  # --------------------------------------------------------------------------
+  # SERVICE-SPECIFIC SECURITY - APPROPRIATE USE (ANTI-PATTERNS)
+  # --------------------------------------------------------------------------
+
+  - id: KV-ANTI-001
+    type: anti_pattern
+    source_section: "Service-specific security > Appropriate use of Key Vault"
+    recommendation: "Do not use Key Vault as a general data store"
+    prohibited_patterns:
+      prose:
+        - "store (config|configuration|settings) in key vault"
+        - "key vault (for|to store) (config|application data)"
+      notes: "Detect prose suggesting KV for non-secret data"
+    alternative: "Azure App Configuration or Azure Storage"
+    severity: medium
+    
+  - id: KV-ANTI-002
+    type: anti_pattern
+    source_section: "Service-specific security > Appropriate use of Key Vault"
+    recommendation: "Do not store certificates as secrets"
+    prohibited_patterns:
+      code:
+        - pattern: "az keyvault secret set.*\\.(pfx|cer|pem)"
+          description: "CLI storing cert file as secret"
+        - pattern: "Set-AzKeyVaultSecret.*certificate"
+          description: "PowerShell storing cert as secret"
+    alternative: "Use Key Vault certificate object type"
+    severity: high
+    notes: "Certificates should use certificate APIs for lifecycle management"
+
+  # --------------------------------------------------------------------------
+  # DATA PROTECTION
+  # --------------------------------------------------------------------------
+
+  - id: KV-DATA-001
+    type: configuration
+    source_section: "Data protection"
+    recommendation: "Enable soft delete"
+    required_in:
+      cli:
+        command: "az keyvault create"
+        flag: "--enable-soft-delete"
+        note: "Enabled by default since 2020; flag confirms intent"
+      powershell:
+        command: "New-AzKeyVault"
+        flag: "-EnableSoftDelete"
+      arm_bicep:
+        property: "properties.enableSoftDelete"
+        value: true
+      portal:
+        setting: "Soft delete: Enabled"
+    severity: high
+    notes: "Enabled by default on new vaults; cannot be disabled once enabled"
+
+  - id: KV-DATA-002
+    type: configuration
+    source_section: "Data protection"
+    recommendation: "Enable purge protection"
+    required_in:
+      cli:
+        command: "az keyvault create"
+        flag: "--enable-purge-protection"
+      powershell:
+        command: "New-AzKeyVault"
+        flag: "-EnablePurgeProtection"
+      arm_bicep:
+        property: "properties.enablePurgeProtection"
+        value: true
+      portal:
+        setting: "Purge protection: Enabled"
+    severity: critical
+    notes: "Prevents permanent deletion; cannot be disabled once enabled"
+
+  - id: KV-DATA-003
+    type: configuration
+    source_section: "Data protection"
+    recommendation: "Implement autorotation for cryptographic assets"
+    detection:
+      when_topic: "key rotation|secret rotation|certificate renewal"
+      should_demonstrate: "autorotation|automatic rotation|rotation policy"
+    severity: medium
+    notes: "Applies to keys, secrets, and certificates"
+
+  - id: KV-DATA-004
+    type: configuration
+    source_section: "Data protection"
+    recommendation: "Set expiration dates on keys and secrets"
+    required_in:
+      cli:
+        command: "az keyvault (key|secret) (create|set)"
+        flag: "--expires"
+      powershell:
+        command: "(Add|Set)-AzKeyVault(Key|Secret)"
+        flag: "-Expires"
+      arm_bicep:
+        property: "properties.attributes.exp"
+    severity: medium
+    
+  - id: KV-DATA-005
+    type: configuration
+    source_section: "Data protection"
+    recommendation: "Use HSM-protected keys for high-security scenarios"
+    detection:
+      when_topic: "hsm|hardware security|fips|high security"
+      should_demonstrate:
+        cli: "--kty RSA-HSM|--kty EC-HSM"
+        powershell: "-KeyType RSA-HSM|-KeyType EC-HSM"
+    severity: low
+    notes: "Requires Premium tier; context-dependent recommendation"
+
+  # --------------------------------------------------------------------------
+  # IDENTITY AND ACCESS MANAGEMENT
+  # --------------------------------------------------------------------------
+
+  - id: KV-IAM-001
+    type: authentication
+    source_section: "Identity and access management"
+    recommendation: "Use managed identities for application authentication"
+    preferred_patterns:
+      code:
+        - "DefaultAzureCredential"
+        - "ManagedIdentityCredential"
+        - "managed identity"
+        - "system-assigned identity"
+        - "user-assigned identity"
+    discouraged_patterns:
+      code:
+        - "ClientSecretCredential"
+        - "ClientCertificateCredential"  # Less severe than secret
+        - "client_secret"
+        - "client secret"
+        - pattern: "new SecretClient.*\".*\".*\".*\""
+          description: "Hardcoded credentials in constructor"
+    exception:
+      context: "local development|development only|testing"
+      note: "Client secrets acceptable in dev context with warning"
+    severity: high
+
+  - id: KV-IAM-002
+    type: command_flag
+    source_section: "Identity and access management"
+    recommendation: "Use Azure role-based access control (RBAC)"
+    required_in:
+      cli:
+        command: "az keyvault create"
+        required_flags:
+          - "--enable-rbac-authorization"
+      powershell:
+        command: "New-AzKeyVault"
+        required_flags:
+          - "-EnableRbacAuthorization"
+      arm_bicep:
+        property: "properties.enableRbacAuthorization"
+        value: true
+      portal:
+        setting: "Permission model: Azure role-based access control"
+    severity: critical
+    notes: "RBAC is the recommended permission model; access policies are legacy"
+
+  - id: KV-IAM-003
+    type: anti_pattern
+    source_section: "Identity and access management"
+    recommendation: "Do not use legacy access policies"
+    prohibited_patterns:
+      cli:
+        - "az keyvault set-policy"
+        - "az keyvault delete-policy"
+      powershell:
+        - "Set-AzKeyVaultAccessPolicy"
+        - "Remove-AzKeyVaultAccessPolicy"
+      arm_bicep:
+        - "accessPolicies:"
+        - "\"accessPolicies\":"
+      prose:
+        - "access polic(y|ies)"
+        - "vault access policy"
+    exception:
+      context: "migration|legacy|deprecat"
+      note: "Acceptable when documenting migration FROM access policies"
+    severity: critical
+    alternative: "Use Azure RBAC role assignments"
+
+  - id: KV-IAM-004
+    type: prose
+    source_section: "Identity and access management"
+    recommendation: "Assign just-in-time (JIT) privileged roles using PIM"
+    detection:
+      when_topic: "admin|administrator|privileged|owner|contributor"
+      should_mention:
+        - "PIM|Privileged Identity Management"
+        - "just-in-time|JIT"
+        - "eligible"
+    severity: medium
+
+  - id: KV-IAM-005
+    type: prose
+    source_section: "Identity and access management"
+    recommendation: "Apply the principle of least privilege"
+    detection:
+      when_assigning: "role|permission|access"
+      should_mention:
+        - "least privilege"
+        - "minimum permission"
+        - "Key Vault Secrets User|Key Vault Crypto User|Key Vault Certificates Officer"
+    severity: medium
+    notes: "Favor granular roles over Owner/Contributor"
+
+  - id: KV-IAM-006
+    type: prose
+    source_section: "Identity and access management"
+    recommendation: "Tightly control Contributor role access"
+    detection:
+      when_assigning: "Contributor|Owner"
+      should_warn: "data plane access|grant themselves access"
+    severity: low
+
+  # --------------------------------------------------------------------------
+  # NETWORK SECURITY  
+  # --------------------------------------------------------------------------
+
+  - id: KV-NET-001
+    type: network
+    source_section: "Network security"
+    recommendation: "Disable public network access and use private endpoints"
+    required_in:
+      cli:
+        command: "az keyvault create|update"
+        flags:
+          - "--public-network-access Disabled"
+          - "--default-action Deny"
+      powershell:
+        command: "New-AzKeyVault|Set-AzKeyVault"
+        flags:
+          - "-PublicNetworkAccess Disabled"
+      arm_bicep:
+        properties:
+          - "properties.publicNetworkAccess: 'Disabled'"
+          - "properties.networkAcls.defaultAction: 'Deny'"
+    detection:
+      when_showing: "public endpoint|public access|internet access"
+      must_mention: "private endpoint|Private Link"
+      cross_reference: "/azure/key-vault/general/private-link-service"
+    exception:
+      context: "trusted Microsoft services"
+      note: "Some scenarios require trusted service bypass"
+    severity: high
+
+  - id: KV-NET-002
+    type: configuration
+    source_section: "Network security"
+    recommendation: "Configure firewall rules to restrict access"
+    detection:
+      when_topic: "firewall|ip restriction|network rule"
+      should_demonstrate:
+        cli: "az keyvault network-rule"
+        powershell: "Add-AzKeyVaultNetworkRule"
+    severity: medium
+
+  - id: KV-NET-003
+    type: configuration
+    source_section: "Network security"
+    recommendation: "Use virtual network service endpoints"
+    detection:
+      when_topic: "service endpoint|vnet integration"
+      should_demonstrate: "Microsoft.KeyVault service endpoint"
+    severity: low
+    notes: "Private endpoints preferred; service endpoints are fallback"
+
+  # --------------------------------------------------------------------------
+  # TLS AND HTTPS
+  # --------------------------------------------------------------------------
+
+  - id: KV-TLS-001
+    type: prose
+    source_section: "TLS and HTTPS"
+    recommendation: "Enforce TLS version control"
+    detection:
+      when_topic: "tls|ssl|protocol|encryption in transit"
+      should_mention: "TLS 1.2|TLS 1.3"
+    severity: low
+    notes: "Key Vault enforces TLS 1.2+ by default"
+
+  - id: KV-TLS-002
+    type: authentication
+    source_section: "TLS and HTTPS"
+    recommendation: "Use Azure Identity client libraries"
+    preferred_patterns:
+      code:
+        - "@azure/identity"
+        - "Azure.Identity"
+        - "azure-identity"
+        - "azure.identity"
+    severity: low
+
+  # --------------------------------------------------------------------------
+  # LOGGING AND MONITORING
+  # --------------------------------------------------------------------------
+
+  - id: KV-LOG-001
+    type: configuration
+    source_section: "Logging and monitoring"
+    recommendation: "Enable diagnostic logging"
+    required_in:
+      cli:
+        command: "az monitor diagnostic-settings create"
+        context: "key vault|keyvault"
+      powershell:
+        command: "Set-AzDiagnosticSetting"
+        context: "key vault"
+    detection:
+      when_topic: "logging|audit|diagnostic|monitor"
+      should_demonstrate: "diagnostic settings|diagnostic logs"
+    severity: high
+
+  - id: KV-LOG-002
+    type: configuration
+    source_section: "Logging and monitoring"
+    recommendation: "Enable Microsoft Defender for Key Vault"
+    detection:
+      when_topic: "security|threat|protection|defender"
+      should_mention: "Defender for Key Vault|Microsoft Defender"
+    severity: medium
+
+  - id: KV-LOG-003
+    type: configuration
+    source_section: "Logging and monitoring"
+    recommendation: "Configure alerts for security events"
+    detection:
+      when_topic: "alert|notification|incident"
+      should_demonstrate: "alert rule|action group"
+    severity: low
+
+  - id: KV-LOG-004
+    type: configuration
+    source_section: "Logging and monitoring"
+    recommendation: "Monitor with Azure Event Grid"
+    detection:
+      when_topic: "event|notification|near expiry"
+      should_mention: "Event Grid"
+    severity: low
+
+  # --------------------------------------------------------------------------
+  # COMPLIANCE AND GOVERNANCE
+  # --------------------------------------------------------------------------
+
+  - id: KV-GOV-001
+    type: configuration
+    source_section: "Compliance and governance"
+    recommendation: "Use Azure Policy to enforce secure configurations"
+    detection:
+      when_topic: "policy|governance|compliance|audit"
+      should_mention: "Azure Policy"
+    severity: medium
+
+  - id: KV-GOV-002
+    type: configuration
+    source_section: "Compliance and governance"
+    recommendation: "Use resource locks for critical vaults"
+    detection:
+      when_topic: "lock|protect|prevent deletion"
+      should_demonstrate:
+        cli: "az lock create"
+        powershell: "New-AzResourceLock"
+    severity: low
+
+  # --------------------------------------------------------------------------
+  # BACKUP AND RECOVERY
+  # --------------------------------------------------------------------------
+
+  - id: KV-BAK-001
+    type: prose
+    source_section: "Backup and recovery"
+    recommendation: "Rely on automatic redundancy"
+    detection:
+      when_topic: "redundancy|replication|availability"
+      should_mention: "automatic redundancy|built-in redundancy"
+    severity: low
+    notes: "Manual backups rarely needed due to automatic redundancy"
+
+  - id: KV-BAK-002
+    type: configuration
+    source_section: "Backup and recovery"
+    recommendation: "Back up critical objects that cannot be recreated"
+    detection:
+      when_topic: "backup|export|disaster recovery"
+      should_demonstrate:
+        cli: "az keyvault (key|secret|certificate) backup"
+        powershell: "Backup-AzKeyVault(Key|Secret|Certificate)"
+    severity: low
+
+# ============================================================================
+# EXTRACTION SUMMARY
+# ============================================================================
+
+summary:
+  total_rules: 28
+  by_type:
+    command_flag: 1
+    configuration: 13
+    anti_pattern: 3
+    authentication: 2
+    network: 1
+    prose: 8
+  by_severity:
+    critical: 3  # Purge protection, RBAC, no access policies
+    high: 6      # Soft delete, managed identity, private endpoints, diagnostic logging, cert storage
+    medium: 9    # Various best practices
+    low: 10      # Informational guidance
+  
+  high_confidence_rules:
+    - KV-IAM-002  # RBAC - clear CLI/PS flags
+    - KV-IAM-003  # No access policies - clear prohibited commands
+    - KV-DATA-001 # Soft delete - clear flags
+    - KV-DATA-002 # Purge protection - clear flags
+    - KV-IAM-001  # Managed identity - clear code patterns
+    - KV-NET-001  # Private endpoints - clear configuration
+    
+  low_confidence_rules:
+    - KV-ARCH-001 # Separate vaults - prose only
+    - KV-IAM-004  # JIT/PIM - prose detection hard
+    - KV-LOG-003  # Alerts - many valid patterns
+
+# ============================================================================
+# NOTES ON EXTRACTION FEASIBILITY
+# ============================================================================
+
+feasibility_assessment:
+  
+  highly_automatable:
+    description: "Rules with clear CLI/PowerShell flag requirements"
+    examples:
+      - "RBAC authorization flag"
+      - "Soft delete / purge protection flags"
+      - "Access policy commands (prohibited)"
+    confidence: ">90% detection accuracy"
+    
+  moderately_automatable:
+    description: "Rules with clear code patterns but context-dependent"
+    examples:
+      - "Managed identity vs client secret"
+      - "Private endpoint configuration"
+      - "Diagnostic settings"
+    confidence: "70-90% detection accuracy"
+    notes: "May need context analysis to reduce false positives"
+    
+  difficult_to_automate:
+    description: "Rules requiring prose analysis or architecture understanding"
+    examples:
+      - "Separate vaults per environment"
+      - "JIT privileged roles"
+      - "Least privilege"
+    confidence: "50-70% detection accuracy"
+    notes: "May need NLP or keyword heuristics"
+    
+  manual_review_required:
+    description: "Rules too context-dependent for automation"
+    examples:
+      - "Choose appropriate tier"
+      - "Back up objects that cannot be recreated"
+    notes: "Include in checklist but don't auto-flag violations"
+
+next_steps:
+  - "Test high-confidence rules against real Key Vault docset"
+  - "Measure false positive rate on KV-IAM-003 (access policies)"
+  - "Refine prose detection patterns"
+  - "Build exception handling for migration/legacy content"

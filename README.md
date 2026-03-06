@@ -130,27 +130,7 @@ This validation step helps catch:
 - Missing service-specific security capabilities
 - Technical inaccuracies in implementation guidance
 
-### 5. Convert Links to Relative Paths
-
-For better compatibility with Microsoft Learn standards, convert all full URLs to relative paths using GitHub Copilot:
-
-1. Open the generated file in VS Code
-2. Open GitHub Copilot Chat
-3. Use this prompt:
-
-```markdown
-Please convert all full Microsoft Learn URLs in this document to relative paths. 
-For example, change:
-- https://learn.microsoft.com/azure/service/feature to /azure/service/feature
-- https://learn.microsoft.com/security/benchmark to /security/benchmark
-- https://learn.microsoft.com/entra/identity to /entra/identity
-
-Make sure to preserve all link text and maintain the exact same markdown formatting.
-```
-
-This step ensures the links follow Microsoft Learn's recommended format for internal references.
-
-### 6. Loop in the service PM team
+### 5. Loop in the service PM team
 
 Once you have a quality draft, collaborate with the service PM team to finalize the content:
 
@@ -185,7 +165,7 @@ Generated articles automatically include:
 ### Technical Standards
 
 - **Authoritative sources**: Links only to Microsoft Learn documentation
-- **Link formatting**: Initially uses full URLs (`https://learn.microsoft.com/azure/service/feature`) which are later converted to relative paths (`/azure/service/feature`)
+- **Link formatting**: Uses site-relative paths (e.g., `/azure/service/feature`) for all links
 - **Verified recommendations**: All guidance supported by current Azure capabilities
 - **Domain-appropriate ordering**: Security sections ordered by foundational importance
 

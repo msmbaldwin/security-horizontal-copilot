@@ -11,3 +11,4 @@ venv/
 # VS Code settings (optional)
 .vscode/
 
+.copilot-instructions.md

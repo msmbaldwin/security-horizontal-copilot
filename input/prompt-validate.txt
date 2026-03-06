@@ -6,55 +6,175 @@
 
 ## Validation Instructions
 
-Systematically review and validate every security recommendation in the currently open article to ensure service specificity and documentation accuracy. Apply all corrections directly to the open article by editing the file. 
+Systematically review and validate every aspect of the currently open security article. This validation should occur in a **fresh chat session** to avoid confirmation bias from the generation phase. Apply all corrections directly to the open article by editing the file.
 
-**CRITICAL**: For each recommendation, don't just verify the feature exists - understand HOW it works with the specific service architecture.
+**CRITICAL**: For each recommendation, don't just verify the feature exists—understand HOW it works with the specific service architecture.
 
-For each recommendation, verify that:
+## Phase 1: Structural Validation
 
-1. **Service Applicability & Architecture Understanding**: 
-   - Does the security control apply specifically to `<Service>` and its actual deployment model?
-   - **How exactly does `<Service>` implement this feature?** (e.g., does it deploy into customer VNets, or only support it via private endpoints?)
-   - Is this generic Azure advice or truly service-specific guidance?
-   - Does the service's architecture support this security control in the way described?
+### Service Category and Section Ordering
+First, verify the article uses the correct section ordering for the service category:
 
-2. **Implementation-Specific Validation**: 
-   - **What are the specific prerequisites** for implementing this recommendation with `<Service>`?
-   - **What are the limitations or constraints** when using this feature with `<Service>`?
-   - Are there service-specific steps or configurations required that aren't mentioned?
-   - Does the recommendation correctly describe the relationship between `<Service>` and other Azure services involved?
+| Service Category | Expected Section Order |
+|------------------|------------------------|
+| **Key/Secret Management** (Key Vault, Managed HSM) | Service-specific → Data protection → Identity → Network → TLS/HTTPS → Logging → Compliance → Backup |
+| **Identity Services** (Entra ID, B2C) | Identity → Network → Data protection → Logging → Compliance → Backup → Service-specific |
+| **Storage Services** (Blob, Files, Data Lake) | Data protection → Network → Identity → Logging → Compliance → Backup → Service-specific |
+| **Compute Services** (VMs, App Service, Functions) | Network → Identity → Data protection → Logging → Compliance → Backup → Service-specific |
+| **Database Services** (SQL, Cosmos DB, PostgreSQL) | Data protection → Network → Identity → Logging → Compliance → Backup → Service-specific |
+| **All Others** | Network → Identity → Data protection → Logging → Compliance → Backup → Service-specific |
 
-3. **Documentation Validation**: Each recommendation must link to official Microsoft Learn documentation that:
-   - Is specific to `<Service>` (preferred from `<Docset>`)
-   - Actually supports the exact recommendation being made **in the context described**
-   - Provides concrete implementation guidance for `<Service>` specifically
-   - Uses current, non-deprecated features
-   - Explains any service-specific limitations or requirements
+**Check:**
+- [ ] Service category is correctly identified
+- [ ] Section order matches the service category
+- [ ] TLS/HTTPS section included if service has specific protocol requirements
+- [ ] Related security articles section included if sub-resource articles exist
 
-4. **Technical Accuracy & Context**: 
-   - The recommendation describes features and configurations that actually exist for `<Service>`
-   - **The implementation context is accurately described** (e.g., "NSGs for subnets hosting private endpoints" vs "NSGs for the service directly")
-   - No capabilities from other Azure services are incorrectly attributed to `<Service>`
-   - Service-specific constraints and dependencies are properly explained
+### Anti-Pattern Validation
+For any "Do not" recommendations in the Service-Specific Security section:
 
-**Deep Validation Process**: Go through every single recommendation systematically using Microsoft Learn documentation search to:
-- **Question the implementation details**: How exactly does this work with `<Service>`?
-- **Verify architectural compatibility**: Does `<Service>`'s deployment model support this recommendation as described?
-- **Check for missing context**: Are there important prerequisites, limitations, or dependencies not mentioned?
-- **Validate documentation links** point to appropriate service-specific content that supports the exact implementation described
-- **Fix or remove any recommendations that are too generic, architecturally incompatible, or incorrectly described**
-- **Ensure no placeholder content or broken links remain**
-- **Add necessary context** about service-specific implementation requirements or limitations
+- [ ] Each anti-pattern is supported by official Microsoft documentation
+- [ ] No fabricated anti-patterns (guidance not found in docs)
+- [ ] Anti-patterns correctly explain WHY the use is inappropriate
+- [ ] Alternative approaches are provided with valid links
+
+**If anti-patterns exist without documentation support, REMOVE them.**
+
+## Phase 2: Per-Recommendation Validation
+
+For each recommendation, complete this checklist:
+
+- [ ] **Architecture compatibility**: Does the service's deployment model support this control as described?
+- [ ] **Feature verification**: Does this feature exist and work as described for `<Service>` specifically?
+- [ ] **Link validation**: Does the link resolve AND directly support the exact claim made?
+- [ ] **Specificity check**: Is this service-specific guidance, not generic Azure advice?
+- [ ] **Actionable choice**: Is this something the customer can actually choose to do? Remove recommendations where:
+  - The feature is enforced by default with no option to disable (e.g., "Use TLS 1.2" when TLS 1.2+ is required)
+  - The capability is built into the architecture with no configuration needed (e.g., built-in HA)
+  - The guidance is non-actionable (e.g., "Understand X" instead of "Configure X")
+- [ ] **Context accuracy**: Are prerequisites, limitations, and implementation details correct?
+- [ ] **Link format**: Uses site-relative path (e.g., `/azure/service/feature`), not full URL
+
+## Issue Severity Classification
+
+Classify each issue found:
+
+- **CRITICAL** (Remove or completely rewrite):
+  - Wrong architecture assumptions (e.g., VNet deployment when service doesn't support it)
+  - Hallucinated features that don't exist
+  - Fundamentally incorrect implementation guidance
+  - Fabricated anti-patterns without documentation support
+  - Wrong section ordering for service category
+
+- **HIGH** (Significant rewrite needed):
+  - Vague or generic guidance that could apply to any Azure service
+  - Missing critical context about prerequisites or limitations
+  - Misleading descriptions of how the feature works
+  - Anti-patterns that overstate or misrepresent documentation
+
+- **MEDIUM** (Fix required):
+  - Broken or incorrect documentation link
+  - Minor technical inaccuracies
+  - Link uses full URL instead of site-relative path
+  - Missing service-specific context
+
+- **LOW** (Style/formatting):
+  - Formatting inconsistencies
+  - Minor wording improvements
+  - Style guide deviations
+
+## Phase 3: Detailed Technical Validation
+
+For each recommendation, verify:
+
+### 1. Service Applicability & Architecture
+- Does the security control apply specifically to `<Service>` and its actual deployment model?
+- **How exactly does `<Service>` implement this feature?** (e.g., does it deploy into customer VNets, or only support it via private endpoints?)
+- Is this generic Azure advice or truly service-specific guidance?
+
+### 2. Implementation-Specific Accuracy
+- **What are the specific prerequisites** for implementing this recommendation with `<Service>`?
+- **What are the limitations or constraints** when using this feature with `<Service>`?
+- Does the recommendation correctly describe the relationship between `<Service>` and other Azure services involved?
+
+### 3. Documentation Validation
+Each recommendation must link to official Microsoft Learn documentation that:
+- Is specific to `<Service>` (preferred from `<Docset>`)
+- Actually supports the exact recommendation being made **in the context described**
+- Uses site-relative path format (e.g., `/azure/service/feature`), not full URLs
+
+### 4. Technical Accuracy & Context
+- The recommendation describes features and configurations that actually exist for `<Service>`
+- **The implementation context is accurately described** (e.g., "NSGs for subnets hosting private endpoints" vs "NSGs for the service directly")
+- No capabilities from other Azure services are incorrectly attributed to `<Service>`
+
+## Common Issues to Look For
 
 Focus especially on identifying and correcting:
+
 - **Networking recommendations that assume VNet deployment** when `<Service>` doesn't support it
 - **Security controls that only work through specific mechanisms** (e.g., only via private endpoints) but don't clearly state this
 - **Generic Azure features incorrectly described** as applying directly to `<Service>` when they require specific architectural patterns
-- **Authentication/authorization methods** `<Service>` doesn't actually support or supports with limitations  
+- **Authentication/authorization methods** `<Service>` doesn't actually support or supports with limitations
 - **Monitoring/logging capabilities** that aren't available for `<Service>` or work differently than described
 - **Backup/disaster recovery features** that don't exist for `<Service>` or have service-specific implementations
-- **Missing service-specific context** about how standard Azure features integrate with `<Service>`
+- **Anti-patterns presented as fact** when documentation doesn't support them
+- **Missing TLS/HTTPS section** when service has protocol-specific requirements
+- **Missing Related security articles section** when sub-resource articles exist
 
-**Execution**: After validation, make the necessary changes directly to the open security article file. Apply corrections, improvements, and fixes identified during the validation process.
+## Execution
 
-The goal is to ensure every recommendation is verifiably accurate, service-specific to `<Service>`, and properly documented with links to `<Docset>` or other authoritative Microsoft Learn sources.
+1. **Verify structure first**: Check service category and section ordering
+2. **Validate anti-patterns**: Confirm each "Do not" recommendation has documentation support
+3. **Check each recommendation**: Use Microsoft Learn documentation search to verify claims
+4. **Fix issues in place**: Apply corrections directly to the article file
+5. **Document changes**: Briefly note what was fixed and why
+
+**Goal**: Ensure every recommendation is verifiably accurate, service-specific to `<Service>`, and properly documented with links to `<Docset>` or other authoritative Microsoft Learn sources (using site-relative paths). Reference MCSB v2 baselines at `/security/benchmark/azure/baselines/<service>-security-baseline` when validating against security benchmarks.
+
+## Phase 5: Final Quality Checklist
+
+Before completing validation, verify:
+
+- [ ] No placeholder content remains
+- [ ] Formatting is consistent throughout
+- [ ] Links use site-relative paths (no `https://learn.microsoft.com` prefix)
+- [ ] **No `[!IMPORTANT]`, `[!NOTE]`, or other Markdown callouts**—all critical information is integrated into recommendation text
+- [ ] Content is optimized for AI parsing
+- [ ] Article structure matches template
+- [ ] Recommendations align with workspace documentation when available
+- [ ] Section ordering follows service category rules
+- [ ] Anti-patterns are included only when documentation supports them (not fabricated)
+
+## Phase 4: Completeness Validation
+
+Verify the article covers these standard security dimensions (when applicable to the service):
+
+### Network Security Completeness
+- [ ] Inbound protection (private endpoints, IP restrictions, service endpoints)
+- [ ] Outbound/backend protection (VNet integration, secure connections to downstream services)
+- [ ] DDoS protection (for internet-facing services - Azure DDoS Protection, Front Door, WAF)
+
+### Identity Completeness
+- [ ] Service authentication (managed identities for accessing other Azure resources)
+- [ ] User authentication (built-in auth providers, if applicable)
+- [ ] Delegated/on-behalf-of authentication (if service supports downstream access on user's behalf)
+- [ ] Management plane RBAC (who can configure the service)
+
+### Compliance Completeness
+- [ ] Azure Policy enforcement
+- [ ] Security posture assessment (Microsoft Defender for Cloud recommendations)
+- [ ] Penetration testing guidance (link to Azure pen test policy if applicable)
+- [ ] Regulatory compliance guidance (HIPAA, PCI, SOC, etc. if service has certifications)
+
+### Platform Security Context
+- [ ] Shared responsibility clarity (what Microsoft secures vs. customer responsibility)
+- [ ] Built-in security features (auto-patching, isolation, encryption at rest, threat protection)
+
+### Data Protection Completeness
+- [ ] Data at rest encryption
+- [ ] Data in transit encryption
+- [ ] Secrets management (Key Vault integration)
+- [ ] Secure connections to backend/remote resources (if service connects to databases, storage, on-premises)
+
+If any applicable area is missing, research and add it before completing validation.

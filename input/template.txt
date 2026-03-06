@@ -18,67 +18,115 @@ ai-usage: ai-assisted
 
 This article provides security recommendations to help protect your Azure <service name> deployment.
 
+<!-- 
+SECTION ORDERING INSTRUCTIONS:
+Reorder the sections below based on service category. See guide.txt for rules.
+
+Key/Secret Management: Service-specific → Data protection → Identity → Network → TLS/HTTPS → Logging → Compliance → Backup
+Identity Services: Identity → Network → Data protection → Logging → Compliance → Backup → Service-specific  
+Storage Services: Data protection → Network → Identity → Logging → Compliance → Backup → Service-specific
+Compute Services: Network → Identity → Data protection → Logging → Compliance → Backup → Service-specific
+Database Services: Data protection → Network → Identity → Logging → Compliance → Backup → Service-specific
+Default: Network → Identity → Data protection → Logging → Compliance → Backup → Service-specific
+-->
+
+## Service-specific security
+
+<!-- 
+Include this section FIRST for key/secret management services.
+Include this section LAST for most other services (default).
+See guide.txt for service category ordering rules.
+-->
+
+<Brief paragraph explaining unique security considerations for this service, including architecture and appropriate use>
+
+### <Service> architecture
+
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit regarding service architecture. See [Documentation link](/azure/service/feature).
+
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
+
+### Appropriate use of <Service>
+
+<!-- 
+Include anti-patterns here ONLY when official Microsoft documentation describes them.
+Do not fabricate anti-patterns. If documentation doesn't describe inappropriate uses, omit this subsection.
+-->
+
+- **Do not use <Service> for <inappropriate use>**: Explanation of why this is inappropriate and what alternative to use instead. See [Alternative approach](/azure/alternative).
+
 ## Network security
 
 <Brief paragraph explaining network security importance for this service>
 
-- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).  
-  See also: [General guidance – Technology or article title](https://learn.microsoft.com/azure/general-link). <!-- Add general link only if needed -->
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
+    - Some scenarios require <exception>. In such cases, <alternative approach>. See [Exception guidance](/path). <!-- Use sub-bullets for exceptions/prerequisites -->
 
-- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
+
+## TLS and HTTPS
+
+<!-- Include this section if the service has specific TLS/protocol requirements -->
+
+<Service> supports TLS <versions> to ensure secure communication between clients and the service.
+
+- **Enforce TLS version control**: Explanation of TLS enforcement and client compatibility. See [Documentation link](/azure/service/feature).
 
 ## Identity and access management
 
 <Brief paragraph explaining identity and access risks for this service>
 
-- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).  
-  See also: [General guidance – Technology or article title](https://learn.microsoft.com/azure/general-link). <!-- Add general link only if needed -->
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).  
+  See also: [General guidance – Technology or article title](/azure/general-link). <!-- Add general link only if needed -->
 
-- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
+    - **Sub-recommendation**: Additional detail or sub-control. See [Link](/path).
 
 ## Data protection
 
 <Brief paragraph explaining data protection importance for this service>
 
-- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
 
-- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
 
 ## Logging and monitoring
 
 <Brief paragraph explaining monitoring importance for this service>
 
-- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
 
-- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
 
 ## Compliance and governance
 
 <Brief paragraph explaining compliance importance for this service>
 
-- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
 
-- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
 
 ## Backup and recovery
 
 <Brief paragraph explaining backup importance for this service>
 
-- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
 
-- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).
+- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](/azure/service/feature).
 
-## Service-specific security
+## Related security articles
 
-<Brief paragraph explaining unique security considerations for this service>
+<!-- Include this section if the service has sub-resource security articles -->
 
-- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).
+For security best practices specific to <sub-resources>, see:
 
-- **Action verb + specific control**: Explanation of the recommendation and its security benefit. See [Documentation link](https://learn.microsoft.com/azure/service/feature).
+- [Secure your <Service> <sub-resource>](/azure/<service>/<sub-resource>/secure-<sub-resource>) - <Brief description>
+- [Secure your <Service> <sub-resource>](/azure/<service>/<sub-resource>/secure-<sub-resource>) - <Brief description>
 
 ## Next steps
 
-- [Microsoft Cloud Security Benchmark – <Service>](https://learn.microsoft.com/security/benchmark/azure/<service>)
-- [Well-Architected Framework – <Service> guide](https://learn.microsoft.com/azure/well-architected/service-guides/<service>)
-- [Security documentation for <Service>](https://learn.microsoft.com/azure/<service>/security/)
-  See also: [Azure Security Documentation](https://learn.microsoft.com/azure/security/). <!-- Example of sparing general link usage -->
+- [Microsoft Cloud Security Benchmark v2 – <Service> security baseline](/security/benchmark/azure/baselines/<service>-security-baseline) <!-- if exists -->
+- [Well-Architected Framework – <Service> guide](/azure/well-architected/service-guides/<service>) <!-- if exists -->
+- [Security documentation for <Service>](/azure/<service>/security/) <!-- if exists -->
+- [Zero Trust guidance center](/security/zero-trust/zero-trust-overview)
+- [Microsoft Cloud Security Benchmark v2 overview](/security/benchmark/azure/overview)

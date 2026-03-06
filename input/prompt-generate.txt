@@ -22,49 +22,66 @@ You are GitHub Copilot generating a comprehensive security checklist article for
 
 **Objective:** Create **"Secure your <Service> deployment"** — a checklist-style article with validated, service-specific security best practices optimized for both human readers and AI consumption.
 
-## Generative Engine Optimization (GEO)
+## Service Classification (MANDATORY - DO FIRST)
 
-### AI Parseability Requirements
-- **Structured Data Format**: Use consistent patterns and hierarchical organization for optimal AI parsing
-- **Semantic Clarity**: Include explicit relationships between concepts using standardized language
-- **Context Completeness**: Provide sufficient context in each section for standalone comprehension
-- **Query Optimization**: Structure content to answer common security questions directly
-- **Machine Readability**: Use predictable formatting patterns and clear section delineation
+Before generating content, classify the service type to determine section ordering:
 
-### AI-Optimized Content Patterns
-- **Consistent Bullet Structure**: Follow exact pattern for AI pattern recognition
-- **Explicit Categorization**: Use clear domain headers with consistent terminology
-- **Action-Outcome Pairing**: Link each recommendation to specific security benefits
-- **Progressive Information Architecture**: Order from foundational to advanced concepts
-- **Cross-Reference Integration**: Include relevant links and related concepts for context building
+### Step 1: Determine Service Category
+Research the service to classify it into ONE of these categories:
 
-### Metadata Enhancement
-- **Service Taxonomy**: Include clear service classification and relationship indicators
-- **Security Domain Mapping**: Explicitly categorize each recommendation by security domain
-- **Implementation Complexity**: Indicate difficulty/effort level for each recommendation
-- **Compliance Alignment**: Reference relevant standards and frameworks where applicable
+| Category | Examples | Primary Security Concern |
+|----------|----------|-------------------------|
+| **Key/Secret Management** | Key Vault, Managed HSM | Cryptographic material protection |
+| **Identity Services** | Entra ID, B2C | Authentication and authorization |
+| **Storage Services** | Blob Storage, Files, Data Lake | Data at rest protection |
+| **Compute Services** | VMs, App Service, Functions | Network isolation and runtime |
+| **Database Services** | SQL, Cosmos DB, PostgreSQL | Data access and encryption |
+| **Networking Services** | VNet, Firewall, Front Door | Traffic control and filtering |
+| **Analytics Services** | Synapse, Databricks, HDInsight | Data processing security |
+| **AI/ML Services** | OpenAI, ML, Cognitive Services | Model and data protection |
+| **Integration Services** | Logic Apps, Event Grid, Service Bus | Message and workflow security |
+| **General PaaS** | Any service not fitting above | Default ordering |
+
+### Step 2: Apply Section Ordering Rule (CRITICAL)
+After classifying the service, apply the **Security Domain Ordering** rules from `guide.txt` to determine section order.
+
+**CRITICAL**: The section order in your output MUST match the service category. Do not use default ordering for specialized services.
+
+## AI Parseability (GEO)
+
+Structure content for both human readers and AI systems:
+- Use consistent bullet patterns and hierarchical organization
+- Provide sufficient context in each section for standalone comprehension
+- Link each recommendation to specific security benefits
+- Use predictable formatting and clear section delineation
 
 ## Research Strategy
 
-### Primary Sources (Execute in Order)
-1. **Workspace Documentation Review**: First, explore the workspace folder structure to understand the service documentation available locally. Use `semantic_search`, `grep_search`, and `file_search` tools to identify security-related content, configuration files, and documentation within the workspace.
-2. **Local Documentation Analysis**: Review relevant files in the workspace using `read_file` to understand current security guidance, configurations, and best practices documented locally.
+### Required Research (Execute All)
+1. **Workspace Documentation Review**: Explore workspace folders to identify local security-related content using `semantic_search`, `grep_search`, and `file_search` tools.
+2. **Local Documentation Analysis**: Review relevant workspace files for current security guidance and configurations.
 3. **Service Documentation Search**: Use `mcp_microsoft_doc_microsoft_docs_search` with query: `<Service> security site:learn.microsoft.com`
-4. **Security Baseline Check**: Search for Microsoft Cloud Security Benchmark at `https://learn.microsoft.com//security/benchmark/azure/<service>`
-5. **Architecture Guide Check**: Search for Well-Architected Framework guide at `https://learn.microsoft.com//azure/well-architected/service-guides/<service>`
-6. **Reliability Guide Check**: Search for Azure Reliability documentation at `https://learn.microsoft.com/en-us/azure/reliability/<service>` to find service-specific reliability guidance relevant to backup and disaster recovery sections
+4. **Security Baseline Check**: Search for MCSB v2 baseline at `/security/benchmark/azure/baselines/<service>-security-baseline`
+5. **Architecture Guide Check**: Search for WAF guide at `/azure/well-architected/service-guides/<service>`
+6. **Anti-Pattern Research**: Search for what NOT to do with the service:
+   - Query: `<Service> best practices NOT do not site:learn.microsoft.com`
+
+### Conditional Research (Execute When Applicable)
+Execute these based on service characteristics:
+
+7. **Reliability Guide** (for backup/DR section): `/azure/reliability/<service>`
+8. **TLS/Protocol Security** (if service exposes endpoints): `<Service> TLS HTTPS protocol security site:learn.microsoft.com`
+9. **Multitenancy Patterns** (if SaaS scenarios apply): `<Service> multitenant isolation site:learn.microsoft.com`
+10. **Sub-Resource Security** (if service has components): `<Service> secure keys OR secrets OR certificates site:learn.microsoft.com`
+11. **Platform Security** (for shared responsibility context): `<Service> security overview platform infrastructure site:learn.microsoft.com`
+12. **Authentication Patterns** (if service supports delegated auth): `<Service> authentication on-behalf-of OR delegated site:learn.microsoft.com`
+13. **Regulatory Compliance** (if compliance guidance exists): `<Service> compliance regulatory HIPAA OR PCI site:learn.microsoft.com`
+14. **DDoS/Attack Protection** (for internet-facing services): `<Service> DDoS protection OR rate limiting site:learn.microsoft.com`
 
 ### Content Integration Rules
 - **Primary Authority**: Local workspace documentation takes precedence, followed by service-specific Microsoft Learn documentation.
-- **Supporting Evidence**: Include MCSB/WAF only when it aligns with current service docs and workspace content.
-- **Linking Logic**: Always provide a link to the service-specific docset, specifically the article that documents the security best practice being described in the bullet point. Only if there is no article in the docset specific to the security best practice being documented should a more general link be used.
-  - If both service-specific and general links are included:
-    - Place the service-specific link in the main sentence.
-    - Add the general link as a second sentence: `See also: [General guidance – Technology or article title](https://learn.microsoft.com/azure/<path>).`
-    - Do not combine both links in the same "See ..." clause.
-  - General links should rarely appear outside bullets and only when they add clear, actionable value.
-  - Always reference the specific technology or full article title in the link text.
-  - Never replace a service-specific link with a general one.
+- **Supporting Evidence**: Include MCSB v2/WAF only when it aligns with current service docs and workspace content.
+- **Link Standards**: Follow the **Link Standards** section in `guide.txt` for formatting and linking logic.
 - **Validation Requirement**: All recommendations must be supported by current Microsoft Learn content.
 - **Specificity Filter**: Include only recommendations that apply directly to the target service.
 - **AI Accessibility**: Structure content for optimal consumption by language models and copilots.
@@ -72,103 +89,66 @@ You are GitHub Copilot generating a comprehensive security checklist article for
 ## Content Requirements
 
 ### Security Domains (Include Only Applicable)
-- **Network Security** — Isolation, filtering, endpoint protection
-- **Identity & Access Management** — Authentication, authorization, RBAC
-- **Data Protection** — Encryption, key management, classification
-- **Logging & Monitoring** — Audit trails, threat detection, alerts
-- **Compliance & Governance** — Policy enforcement, regulatory compliance
-- **Backup & Recovery** — Data protection, business continuity
-- **Service-Specific Security** — Unique security controls for this service
+Order these sections according to Service Classification rules above:
+
+- **Service-Specific Security** — Unique security controls, architecture patterns, anti-patterns, AND platform security context (what the service secures automatically vs. customer responsibility)
+- **Network Security** — Inbound protection (private endpoints, IP restrictions, service endpoints, WAF), outbound/backend protection (VNet integration, secure connections to other services, hybrid connections), AND DDoS protection (for internet-facing services)
+- **TLS and HTTPS** — Protocol versions, enforcement, client requirements (include if service has specific TLS guidance)
+- **Identity & Access Management** — Authentication (built-in auth, managed identities, delegated/on-behalf-of flows), authorization, management plane RBAC
+- **Data Protection** — Encryption, key management, classification, soft delete, purge protection, secure remote connections to backend resources
+- **Logging & Monitoring** — Audit trails, threat detection, alerts, insights dashboards
+- **Compliance & Governance** — Policy enforcement, regulatory compliance, security assessments (Defender for Cloud), penetration testing guidance
+- **Backup & Recovery** — Data protection, business continuity, automatic redundancy
+
+### Required Content Types
+
+#### Positive Recommendations (What TO Do)
+Standard best practice recommendations with action verbs.
+
+#### Anti-Patterns (What NOT To Do) - Include When Documentation Supports
+Include guidance on inappropriate use when official documentation describes anti-patterns, misuse scenarios, or inappropriate use cases. Do not fabricate anti-patterns—only include those supported by Microsoft documentation:
+
+- What data types should NOT be stored in this service
+- What the service should NOT be used for
+- Common misconfigurations to avoid
+- Architectural anti-patterns
+
+Format anti-patterns as:
+```markdown
+- **Do not use <Service> for <inappropriate use>**: <Explanation of why this is wrong and what to use instead>. See [Alternative approach](/azure/alternative).
+```
+
+#### Conditional Recommendations
+When recommendations have prerequisites or exceptions, format as sub-bullets:
+```markdown
+- **Primary recommendation**: Explanation. See [Link](/path).
+    - Some scenarios require <exception>. In such cases, <alternative approach>. See [Exception guidance](/path).
+```
 
 ### Quality Standards
-- Every recommendation must link to authoritative Microsoft documentation.
-- Use full URLs.
-- No placeholder content or generic boilerplate.
-- Follow `template.txt` structure exactly.
-- Apply `guide.txt` writing guidelines for tone and formatting.
-- **Required metadata**: Include `ms.custom: horz-security` in the YAML frontmatter.
-- **GEO Compliance**: Ensure content is structured for optimal AI parsing and retrieval.
-- **Semantic Consistency**: Use standardized terminology and patterns throughout.
-- **Context Sufficiency**: Each section must be comprehensible without external context.
-
-### AI-Optimized Formatting Requirements
-- **Predictable Structure**: Maintain consistent section ordering and bullet formatting.
-- **Explicit Relationships**: Use clear language to indicate dependencies and relationships.
-- **Searchable Content**: Include relevant keywords naturally within context.
-- **Hierarchical Organization**: Organize information from general to specific.
-- **Cross-Reference Clarity**: Make relationships between sections explicit.
+- Every recommendation must link to authoritative Microsoft documentation
+- Use site-relative paths for all links (e.g., `/azure/service/feature`)
+- No placeholder content or generic boilerplate
+- Follow `template.txt` structure and `guide.txt` writing guidelines
+- Include `ms.custom: horz-security` in YAML frontmatter
+- **Do NOT use `[!IMPORTANT]`, `[!NOTE]`, or other callout formatting**—integrate all critical information directly into the recommendation text
+- **Only include actionable recommendations that represent customer choices**:
+  - If a security feature is enforced by the service with no option to disable it, don't present it as a best practice (e.g., "Use TLS 1.2" when the service only supports TLS 1.2+)
+  - If a feature is built into the architecture with no configuration required, mention it as context rather than a recommendation (e.g., built-in high availability)
+  - Non-actionable items like "Understand the shared responsibility model" should be removed or reframed as actionable guidance
+  - Focus on configurations customers can actually choose to enable, disable, or configure
+- Include anti-patterns only when supported by official documentation
+- Section ordering MUST follow service category rules
 
 ## Execution Process
 
-1. **Workspace Discovery Phase**: Explore the workspace folder structure to identify relevant documentation, security content, and configuration files related to the service.
-2. **Local Content Analysis Phase**: Review workspace files to understand current security guidance, best practices, and service-specific configurations.
-3. **External Research Phase**: Search Microsoft Learn for additional service-specific security guidance using the strategy above.
-4. **Content Generation**: Build the article following `template.txt` and `guide.txt`, incorporating both workspace insights and external documentation.
-5. **GEO Optimization**: Structure content for optimal AI parsing and human readability.
-6. **Deep Validation Phase** - Apply rigorous validation during generation:
+1. **Classify Service**: Determine service category and required section ordering using Service Classification rules.
+2. **Research**: Execute Required Research queries, then applicable Conditional queries.
+3. **Generate Content**: Build article following `template.txt` structure and `guide.txt` writing standards.
+4. **Verify Specificity**: Ensure each recommendation applies specifically to `<Service>`, not generic Azure advice.
+5. **Check Links**: Verify documentation links use site-relative paths and point to valid articles.
+6. **Output File**: Write to `./output/secure-<ServiceSlug>.md`
 
-**For each recommendation before including it, verify:**
+> **Note**: For deep validation after generation, use `prompt-validate.txt` in a fresh chat session.
 
-a) **Service Applicability & Architecture Understanding**: 
-   - Does the security control apply specifically to `<Service>` and its actual deployment model?
-   - **How exactly does `<Service>` implement this feature?** (e.g., does it deploy into customer VNets, or only support it via private endpoints?)
-   - Is this generic Azure advice or truly service-specific guidance?
-   - Does the service's architecture support this security control in the way described?
-
-b) **Implementation-Specific Validation**: 
-   - **What are the specific prerequisites** for implementing this recommendation with `<Service>`?
-   - **What are the limitations or constraints** when using this feature with `<Service>`?
-   - Are there service-specific steps or configurations required?
-   - Does the recommendation correctly describe the relationship between `<Service>` and other Azure services involved?
-
-c) **Documentation Validation**: Each recommendation must link to official Microsoft Learn documentation that:
-   - Is specific to `<Service>` (preferred from `<Docset>`)
-   - Actually supports the exact recommendation being made **in the context described**
-   - Provides concrete implementation guidance for `<Service>` specifically
-   - Uses current, non-deprecated features
-   - Explains any service-specific limitations or requirements
-
-d) **Technical Accuracy & Context**: 
-   - The recommendation describes features and configurations that actually exist for `<Service>`
-   - **The implementation context is accurately described** (e.g., "NSGs for subnets hosting private endpoints" vs "NSGs for the service directly")
-   - No capabilities from other Azure services are incorrectly attributed to `<Service>`
-   - Service-specific constraints and dependencies are properly explained
-
-**Exclude recommendations that:**
-- **Assume VNet deployment** when `<Service>` doesn't support it
-- **Describe security controls that only work through specific mechanisms** without clearly stating this
-- **Apply generic Azure features** incorrectly to `<Service>` without proper architectural context
-- **Reference authentication/authorization methods** `<Service>` doesn't actually support or supports with limitations
-- **Claim monitoring/logging capabilities** that aren't available for `<Service>` or work differently than described
-- **Suggest backup/disaster recovery features** that don't exist for `<Service>` or have service-specific implementations
-
-**Critical Generation Rule**: For each potential recommendation, ask "How exactly does this work with `<Service>`?" If you cannot find service-specific documentation that clearly explains the implementation, do not include the recommendation.
-
-7. **Link Verification**:
-  - Verify all URLs resolve to valid Microsoft Learn documentation pages
-  - Ensure each link points to the most specific documentation for the recommendation
-  - Check that no placeholder or incomplete URLs remain in the document
-
-8. **File Output**:
-  - Apply the ServiceSlug Inference Rule to convert <Service> to <ServiceSlug>
-  - Create the ./output directory if it doesn't exist
-  - Write the complete, formatted Markdown to ./output/secure-<ServiceSlug>.md
-  - Do not modify the current document or any template files
-
-**Additional GEO Validation Criteria:**
-- Content follows predictable patterns for AI pattern recognition.
-- Each recommendation includes explicit action–benefit relationships.
-- Section introductions provide clear context and scope.
-- Links and references support both human navigation and AI context building.
-- Terminology remains consistent for semantic clarity.
-
-**Enhanced Generation Methodology:**
-Before including any recommendation, use `mcp_microsoft_doc_microsoft_docs_search` to research:
-1. **Service-specific implementation details** - How does `<Service>` actually implement this security control?
-2. **Architectural constraints** - What deployment models does `<Service>` support?
-3. **Feature availability** - Does `<Service>` actually support this capability as described?
-4. **Implementation requirements** - What are the specific steps and prerequisites for `<Service>`?
-
-Only include recommendations where you can find clear, service-specific documentation that explains the implementation details. When in doubt about architectural compatibility, exclude the recommendation rather than risk providing incorrect guidance.
-
-**Begin research and generation now using this enhanced validation methodology.**
+**Begin research and generation now.**

@@ -13,6 +13,7 @@ This guide defines the specific writing style, tone, and formatting requirements
 
 ### Language Standards
 - **Directive verbs**: Start recommendations with action words (Enable, Configure, Implement, Restrict, Require)
+- **Prohibitive verbs**: Start anti-pattern guidance with "Do not" (Do not use, Do not store, Do not configure)
 - **Plain language**: Avoid jargon, explain technical terms when necessary
 - **Exact terminology**: Use precise Azure service and feature names
 - **Consistent terms**: Use the same terminology throughout the article
@@ -23,15 +24,54 @@ This guide defines the specific writing style, tone, and formatting requirements
 Each security recommendation must follow this exact pattern:
 
 ```markdown
-- **Action verb + specific control**: Clear explanation of the recommendation including why it improves security. See [Feature documentation](https://learn.microsoft.com/azure/service/feature).
+- **Action verb + specific control**: Clear explanation of the recommendation including why it improves security. See [Feature documentation](/azure/service/feature).
 ```
 
 **Examples:**
-- **Enable private endpoints**: Eliminate public internet exposure by routing traffic through your virtual network. See [Azure Private Link](https://learn.microsoft.com/azure/private-link/private-link-overview).
-- **Require multi-factor authentication**: Reduce account compromise risk by enforcing MFA for all administrative access. See [Microsoft Entra MFA](https://learn.microsoft.com/entra/identity/authentication/concept-mfa-howitworks).
+- **Enable private endpoints**: Eliminate public internet exposure by routing traffic through your virtual network. See [Azure Private Link](/azure/private-link/private-link-overview).
+- **Require multi-factor authentication**: Reduce account compromise risk by enforcing MFA for all administrative access. See [Microsoft Entra MFA](/entra/identity/authentication/concept-mfa-howitworks).
+
+### Anti-Pattern Bullet Structure (When Documentation Supports)
+Anti-patterns tell users what NOT to do. Include anti-patterns in the Service-Specific Security section when official Microsoft documentation describes inappropriate uses:
+
+```markdown
+- **Do not use <Service> for <inappropriate use>**: Explanation of why this is inappropriate and what to use instead. See [Alternative approach](/azure/alternative).
+```
+
+**Examples (service-specific):**
+- **Do not use Key Vault as a data store**: Key Vault is designed for cryptographic materials and secrets, not general configuration data. For configurations, use [Azure App Configuration](/azure/azure-app-configuration/overview) or [Azure Storage](/azure/storage/common/storage-introduction).
+- **Do not use Blob Storage for relational data**: Azure Blob Storage is optimized for unstructured data. For relational data with query requirements, use [Azure SQL Database](/azure/azure-sql/database/sql-database-paas-overview) or [Azure Cosmos DB](/azure/cosmos-db/introduction).
+- **Do not expose App Service to the internet without authentication**: Configure authentication before enabling public access. See [Authentication and authorization in Azure App Service](/azure/app-service/overview-authentication-authorization).
+
+### Conditional Recommendation Structure
+When recommendations have exceptions or prerequisites, use sub-bullets:
+
+```markdown
+- **Primary recommendation**: Explanation. See [Link](/path).
+    - Some scenarios require <exception>. In such cases, <alternative>. See [Exception guidance](/path).
+```
+
+**Example:**
+- **Disable public network access and use Private Endpoints only**: Deploy Azure Private Link for private access. See [What is Azure Private Link?](/azure/private-link/private-link-overview).
+    - Some scenarios require trusted Microsoft services to bypass the firewall. In such cases, configure the service to allow Trusted Microsoft Services. See the service-specific network security documentation.
+
+### Granular Control Separation
+When a security capability has multiple distinct sub-controls (e.g., MFA, approvals, time-limits for privileged access), separate each into its own bullet or sub-bullet rather than combining them. This ensures readers can:
+- Implement controls incrementally
+- Reference specific guidance for each control
+- Understand each control's independent security benefit
+
+**Example (incorrect - combined):**
+- **Assign JIT privileged roles**: Use PIM with approvals and MFA for activation. See [PIM overview](/entra/...).
+
+**Example (correct - separated):**
+- **Assign just-in-time (JIT) privileged roles**: Use Azure PIM to assign eligible roles. See [PIM overview](/entra/...).
+    - **Require approvals for privileged role activation**: Ensure at least one approver is required. See [Configure role settings](/entra/...).
+    - **Enforce multi-factor authentication for role activation**: Require MFA to activate JIT roles. See [Microsoft Entra MFA](/entra/...).
 
 ### Link Standards
-- **Format**: Use full URLs (e.g., `https://learn.microsoft.com/azure/service/feature`)
+- **Format**: Use site-relative paths (e.g., `/azure/service/feature`)
+- **Never include**: The `https://learn.microsoft.com` prefix or `/en-us/` locale segment
 - **Text**: Link text should describe the destination clearly
 - **Sources**: Link only to Microsoft Learn documentation
 - **Currency**: Verify all links point to current, active content
@@ -40,7 +80,7 @@ Each security recommendation must follow this exact pattern:
   - Additional context is clearly needed to understand or implement the recommendation.
   - If both service-specific and general links are included:
     - Place the service-specific link in the main sentence.
-    - Add the general link as a second sentence: `See also: [General guidance – Technology or article title](https://learn.microsoft.com/azure/general-link).`
+    - Add the general link as a second sentence: `See also: [General guidance – Technology or article title](/azure/general-link).`
     - Do not combine both links in the same "See ..." clause.
   - General links should rarely appear outside bullets and only when they add clear, actionable value.
   - Always reference the specific technology or full article title in the link text.
@@ -52,37 +92,86 @@ Each security recommendation must follow this exact pattern:
 - **Code formatting**: Use backticks for service names, commands, and values
 - **Punctuation**: End bullets with periods, maintain parallel structure
 
+### Callout Blocks for Critical Information
+Use Microsoft Learn callout syntax for information that requires visual emphasis:
+
+```markdown
+> [!IMPORTANT]
+> Critical constraint, limitation, or prerequisite that affects implementation.
+
+> [!NOTE]
+> Supplementary context that helps readers understand scope or applicability.
+```
+
+**When to use callouts:**
+- Permission model constraints (e.g., "Object-scope assignments only support read operations")
+- Breaking changes or deprecation notices
+- Scope limitations that affect multiple recommendations
+- Prerequisites that must be understood before implementing guidance
+
+**Placement**: Place callouts immediately after the recommendation or section introduction they relate to.
+
 ## Content Organization Standards
 
-### Security Domain Ordering
-**Foundation-first principle**: Order domains by foundational importance to the specific service, not rigid sequence.
+### Security Domain Ordering (CRITICAL)
+**Foundation-first principle**: Order domains by foundational importance to the specific service, not rigid sequence. **This is MANDATORY.**
 
-**Default order** (when domains have equal foundational importance):
-1. Network security
-2. Identity and access management  
-3. Data protection
-4. Logging and monitoring
-5. Compliance and governance
-6. Backup and recovery
-7. Service-specific security
+**Service-specific ordering rules:**
 
-**Service-specific ordering examples:**
-- **Key management services**: Service-specific security → Data protection → Identity and access management
-- **Identity services**: Identity and access management → Network security → Data protection
-- **Storage services**: Data protection → Network security → Identity and access management
-- **Compute services**: Network security typically remains first
+| Service Category | Section Order |
+|------------------|---------------|
+| **Key/Secret Management** (Key Vault, Managed HSM) | Service-specific → Data protection → Identity → Network → TLS/HTTPS → Logging → Compliance → Backup |
+| **Identity Services** (Entra ID, B2C) | Identity → Network → Data protection → Logging → Compliance → Backup → Service-specific |
+| **Storage Services** (Blob, Files, Data Lake) | Data protection → Network → Identity → Logging → Compliance → Backup → Service-specific |
+| **Compute Services** (VMs, App Service, Functions) | Network → Identity → Data protection → Logging → Compliance → Backup → Service-specific |
+| **Database Services** (SQL, Cosmos DB, PostgreSQL) | Data protection → Network → Identity → Logging → Compliance → Backup → Service-specific |
+| **All Other Services** | Network → Identity → Data protection → Logging → Compliance → Backup → Service-specific |
 
 **Apply this ordering logic:**
-1. Core service security fundamentals
-2. Access control and authentication
-3. Data protection and encryption
-4. Infrastructure and network security
-5. Operational security and monitoring
+1. Identify the service category from the table
+2. Reorder all security domain sections accordingly
+3. Service-specific security fundamentals come FIRST for key management services
+4. Include TLS/HTTPS section if service has specific protocol requirements
+
+### Optional Sections (Include When Applicable)
+
+#### TLS and HTTPS Section
+Include when the service has:
+- Specific TLS version requirements or enforcement
+- Protocol negotiation options
+- Client compatibility considerations
+- Multitenant or shared infrastructure architecture that affects TLS behavior
+
+**Architecture context requirement**: When the service uses multitenant infrastructure (shared front-ends, shared public IPs), explain how this affects TLS negotiation and isolation. This context helps readers understand the security model.
+
+```markdown
+## TLS and HTTPS
+
+<Service> supports TLS <versions> to ensure secure communication.
+
+- **Enforce TLS version control**: <Explain architecture context if relevant, e.g., multitenant front-end>. <Specific guidance>. See [Documentation](/path).
+```
+
+**Example with architecture context:**
+- **Enforce TLS version control**: The service front end is a multitenant server where resources from different customers share the same public IP address. Each request is authenticated and authorized independently. Clients can enforce TLS version during negotiation to ensure appropriate protection. See [Service logging](/azure/...) for queries to monitor TLS versions.
+
+#### Related Security Articles Section
+Include when the service has sub-resource or component-specific security articles (e.g., Key Vault has keys/secrets/certificates; Storage has blobs/queues/tables/files; Batch has pools/jobs):
+
+```markdown
+## Related security articles
+
+For security best practices specific to <sub-resources>, see:
+
+- [Secure your <Service> <sub-resource>](/azure/<service>/<sub-resource>/secure-<sub-resource>)
+- [Secure your <Service> <sub-resource>](/azure/<service>/<sub-resource>/secure-<sub-resource>)
+```
 
 ### Recommendation Ordering Within Domains
 1. **Foundation first**: Basic security controls before advanced features
 2. **Impact priority**: High-impact recommendations before supplementary ones
 3. **Implementation flow**: Simple configurations before complex setups
+4. **Anti-patterns last**: Place "Do not" recommendations at the end of the Service-Specific section
 
 ## Content Quality Standards
 
@@ -91,6 +180,15 @@ Each security recommendation must follow this exact pattern:
 - Avoid generic security advice that applies to all Azure services
 - Ensure each recommendation addresses service-specific risks or capabilities
 - Prioritize recommendations that align with existing service documentation and configurations in the workspace
+
+### Anti-Pattern Requirements
+- Include anti-patterns in the Service-Specific Security section when official Microsoft documentation describes them
+- Do not fabricate anti-patterns to meet a quota—include only those supported by documentation
+- When anti-patterns exist, they should cover:
+  - Inappropriate data storage (what NOT to store)
+  - Inappropriate use cases (what NOT to use the service for)
+  - Common misconfigurations (what NOT to configure)
+  - Architectural anti-patterns (design mistakes to avoid)
 
 ### Evidence Requirements
 - Every recommendation must link to official Microsoft Learn documentation
@@ -118,9 +216,3 @@ Each security recommendation must follow this exact pattern:
 - Use exact Azure service names and feature terminology
 - Verify technical accuracy of all recommendations against both external documentation and workspace content
 - Ensure compatibility with current Azure capabilities and existing configurations
-- [ ] No placeholder content remains
-- [ ] Formatting is consistent throughout
-- [ ] Links use full URLs
-- [ ] Content is optimized for AI parsing
-- [ ] Article structure matches template
-- [ ] Recommendations align with workspace documentation when available
