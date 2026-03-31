@@ -14,28 +14,18 @@ ai-usage: ai-assisted
 
 <Azure service> provides capabilities to <briefly describe what the service does>. When deploying this service, it's important to follow security best practices to protect data, configurations, and infrastructure.
 
-[!INCLUDE [Security horizontal Zero Trust statement](~/reusable-content/ce-skilling/azure/includes/security/zero-trust-security-horizontal.md)]
-
 This article provides security recommendations to help protect your Azure <service name> deployment.
 
-<!-- 
-SECTION ORDERING INSTRUCTIONS:
-Reorder the sections below based on service category. See guide.txt for rules.
-
-Key/Secret Management: Service-specific → Data protection → Identity → Network → TLS/HTTPS → Logging → Compliance → Backup
-Identity Services: Identity → Network → Data protection → Logging → Compliance → Backup → Service-specific  
-Storage Services: Data protection → Network → Identity → Logging → Compliance → Backup → Service-specific
-Compute Services: Network → Identity → Data protection → Logging → Compliance → Backup → Service-specific
-Database Services: Data protection → Network → Identity → Logging → Compliance → Backup → Service-specific
-Default: Network → Identity → Data protection → Logging → Compliance → Backup → Service-specific
--->
+[!INCLUDE [Security horizontal Zero Trust statement](~/reusable-content/ce-skilling/azure/includes/security/zero-trust-security-horizontal.md)]
 
 ## Service-specific security
 
 <!-- 
-Include this section FIRST for key/secret management services.
-Include this section LAST for most other services (default).
-See guide.txt for service category ordering rules.
+Include this section only when:
+- The service has unique architectural considerations
+- Official documentation describes anti-patterns or inappropriate uses
+- The service has distinct security fundamentals not covered by standard domains
+When present, this section comes first to establish context for other sections.
 -->
 
 <Brief paragraph explaining unique security considerations for this service, including architecture and appropriate use>

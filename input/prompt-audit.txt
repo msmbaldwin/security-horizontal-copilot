@@ -1,0 +1,169 @@
+# Security Article Audit and Update
+
+**Service Configuration:**
+- `<Service>` = "XXX" (Replace with your Azure service name)
+- `<Docset>` = https://learn.microsoft.com/azure/XXX (Replace with your service docset URL)
+- `<ArticlePath>` = (Path to existing secure-*.md article to audit)
+
+## Audit Objective
+
+Perform a comprehensive audit of an existing security horizontal article to ensure:
+1. **Currency**: All capabilities and features are up-to-date
+2. **Factual accuracy**: Every claim is verified against underlying documentation
+3. **Source of truth**: Every best practice links to supporting procedural documentation
+4. **Completeness**: No significant security capabilities are missing
+
+**Core Principle (Source of Truth):** Security articles are an INDEX, not a repository. They summarize and link to guidance that exists in the technical docs. No best practice should appear in a security article that isn't described in detail elsewhere.
+
+## Phase 1: Docset Discovery
+
+### Research Current Service Capabilities
+Before reviewing the article, understand the current state of the docset:
+
+1. **List docset contents**: `list_dir` on the service docset folder
+2. **Find security-related content**: Search for security-related articles
+   - `grep_search` for: `security|encrypt|authenticat|firewall|private endpoint|RBAC|access control`
+3. **Check for new articles**: Compare docset contents against article links
+4. **Review TOC structure**: Read `toc.yml` to understand documentation organization
+5. **Find recent additions**: Search for content that may be newer than the security article's ms.date
+
+### Document Capability Inventory
+Create a checklist of security-relevant capabilities found in the docset:
+- [ ] Network security features (private endpoints, firewalls, VNet integration)
+- [ ] Identity features (managed identities, RBAC, authentication options)
+- [ ] Data protection features (encryption, key management, soft delete)
+- [ ] Monitoring features (logging, auditing, threat detection)
+- [ ] Compliance features (policy, regulatory certifications)
+- [ ] Backup/recovery features (HA, DR, backup procedures)
+
+## Phase 2: Article Gap Analysis
+
+### Compare Article Against Docset
+For each capability found in Phase 1:
+
+1. **Is it covered?** Does the security article mention this capability?
+2. **Is it accurate?** Does the description match the underlying documentation?
+3. **Is it linked?** Does it link to the procedural/reference documentation?
+
+### Identify Missing Capabilities
+Common gaps to check:
+- [ ] New features added since article was last updated
+- [ ] Features documented elsewhere but not in security article
+- [ ] Sub-resource security (keys, secrets, certificates, partitions, etc.)
+- [ ] Integration security (connections to other Azure services)
+- [ ] Compliance certifications and regulatory guidance
+
+## Phase 3: Fact-Check Every Best Practice
+
+For EACH recommendation in the article, verify:
+
+### 3.1 Feature Existence
+- [ ] Does this feature actually exist for this service?
+- [ ] Is the feature name/terminology correct?
+- [ ] Is the feature available in all regions/SKUs, or are there limitations?
+
+### 3.2 Factual Accuracy
+Read the linked documentation (or find it if missing) and verify:
+- [ ] **Default values**: Are claims about defaults correct? (e.g., "enabled by default")
+- [ ] **Behavior descriptions**: Does the feature work as described?
+- [ ] **Version/protocol claims**: Are version numbers accurate? (e.g., TLS versions)
+- [ ] **Threshold/limit claims**: Are numbers accurate? (e.g., retention periods, attempt limits)
+- [ ] **Role/permission claims**: Are role names and required permissions correct?
+
+### 3.3 Source of Truth Compliance
+- [ ] **Link exists**: Does the recommendation link to underlying documentation?
+- [ ] **Link works**: Does the link resolve (no 404s)?
+- [ ] **Link supports claim**: Does the linked doc actually describe this guidance?
+- [ ] **Link is specific**: Does link go to relevant section, not just overview?
+
+### 3.4 Common Factual Errors to Check
+- TLS/protocol versions - verify against overview or security docs
+- Default settings - verify against quickstart or configuration docs
+- Role names - verify against RBAC or access control docs
+- Lockout thresholds - verify against troubleshooting or FAQ docs
+- Retention periods - verify against soft-delete or backup docs
+
+## Phase 4: Create Missing Documentation
+
+When a best practice lacks supporting documentation:
+
+### Option A: Link to Existing Docs
+If procedural guidance exists elsewhere but wasn't linked:
+1. Find the appropriate article in the docset
+2. Update the recommendation to link to it
+
+### Option B: Add Section to Existing Article
+If adding to an existing article makes sense:
+1. Identify the appropriate article (e.g., security-overview.md, authentication.md)
+2. Add the missing procedural guidance to that article
+3. Link from the security horizontal article
+
+### Option C: Create New Article
+If the topic warrants standalone documentation:
+1. Create a new how-to or concept article
+2. Add to TOC in appropriate location
+3. Link from the security horizontal article
+
+**Documentation Requirements:**
+- New articles must have proper frontmatter (ms.date, ms.service, ms.topic, etc.)
+- New articles must include ai-usage tag if substantially AI-assisted
+- New content must follow Microsoft Writing Style Guide
+
+## Phase 5: Structural Consistency
+
+### Section Ordering
+Verify article follows the standard section order:
+1. Service-specific security (if applicable)
+2. Network security
+3. Identity and access management
+4. Data protection
+5. Logging and monitoring
+6. Compliance and governance
+7. Backup and recovery
+
+### Section Naming
+Verify consistent section names:
+- [ ] "Identity and access management" (not "Identity management" + "Privileged access")
+- [ ] "Logging and monitoring" (not "Logging and threat detection")
+- [ ] "Backup and recovery" (not "High availability and disaster recovery" + "Patching")
+
+### Formatting Consistency
+- [ ] All bullets use bold lead-in pattern: `- **Action verb description**: Details...`
+- [ ] All links use relative paths where possible
+- [ ] No consecutive headings without content between them
+
+## Phase 6: Apply Corrections
+
+### Priority Order for Fixes
+1. **CRITICAL**: Remove factually incorrect claims immediately
+2. **HIGH**: Fix missing or broken documentation links
+3. **MEDIUM**: Add missing capabilities from docset
+4. **LOW**: Improve consistency and formatting
+
+### Commit Message Template
+```
+Security horizontal: <service> audit and update
+
+- [Added/Fixed/Removed]: <description>
+- [Added/Fixed/Removed]: <description>
+```
+
+## Issue Classification Reference
+
+| Severity | Description | Action |
+|----------|-------------|--------|
+| **CRITICAL** | Factually wrong (wrong defaults, nonexistent features, incorrect behavior) | Remove or completely rewrite |
+| **HIGH** | Missing source documentation, broken links, unsupported claims | Create docs or find existing support |
+| **MEDIUM** | Missing capabilities, out-of-date information | Add coverage, update claims |
+| **LOW** | Inconsistent formatting, section ordering | Fix for consistency |
+
+## Output Checklist
+
+Before completing the audit, verify:
+- [ ] Every best practice has a working link to supporting documentation
+- [ ] Every factual claim has been verified against source docs
+- [ ] All new docset capabilities are covered
+- [ ] Section ordering matches the standard
+- [ ] Section naming is consistent
+- [ ] Any new articles created are added to TOC
+- [ ] ms.date updated on all modified files

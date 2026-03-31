@@ -1,0 +1,947 @@
+# Policy Extraction Prototype: Azure Virtual Network
+# Source: /azure/virtual-network/secure-virtual-network.md
+# Generated: 2026-03-17
+# Status: PROTOTYPE - testing extraction feasibility
+
+service: azure-virtual-network
+security_article: /azure/virtual-network/secure-virtual-network.md
+docset_path: /azure/virtual-network/
+extraction_date: 2026-03-17
+extraction_confidence: high  # Many rules have clear CLI/PowerShell mappings
+
+# ============================================================================
+# EXTRACTED RULES
+# ============================================================================
+
+rules:
+
+  # --------------------------------------------------------------------------
+  # NETWORK SECURITY - SEGMENTATION AND NSGs
+  # --------------------------------------------------------------------------
+  
+  - id: VNET-NSG-001
+    type: configuration
+    source_section: "Network security"
+    recommendation: "Segment workloads using Network Security Groups (NSGs) and Application Security Groups"
+    required_in:
+      cli:
+        command: "az network nsg create"
+        context: "subnet|network interface"
+      powershell:
+        command: "New-AzNetworkSecurityGroup"
+      arm_bicep:
+        resource_type: "Microsoft.Network/networkSecurityGroups"
+    detection:
+      when_creating: "subnet|virtual machine|network interface"
+      should_mention:
+        - "network security group|NSG"
+        - "application security group|ASG"
+    severity: high
+    notes: "NSGs should be applied to all subnets; 'deny by default' approach"
+
+  - id: VNET-NSG-002
+    type: prose
+    source_section: "Network security"
+    recommendation: "Use deny by default, permit by exception approach"
+    detection:
+      when_configuring: "NSG|security rule|firewall"
+      should_mention:
+        - "deny by default"
+        - "deny all"
+        - "least privilege"
+    severity: high
+    notes: "Default deny minimizes attack surface"
+
+  - id: VNET-NSG-003
+    type: configuration
+    source_section: "Network security"
+    recommendation: "Enable NSG flow logs for traffic monitoring"
+    required_in:
+      cli:
+        command: "az network watcher flow-log create"
+        required_flags:
+          - "--nsg"
+          - "--enabled true"
+      powershell:
+        command: "Set-AzNetworkWatcherFlowLog"
+    detection:
+      when_topic: "monitoring|traffic analysis|logging"
+      should_mention: "NSG flow log|flow-log"
+    severity: high
+    cross_reference: "/azure/network-watcher/network-watcher-nsg-flow-logging-portal"
+
+  # --------------------------------------------------------------------------
+  # NETWORK SECURITY - AZURE FIREWALL
+  # --------------------------------------------------------------------------
+
+  - id: VNET-FW-001
+    type: configuration
+    source_section: "Network security"
+    recommendation: "Deploy Azure Firewall for centralized, stateful protection"
+    required_in:
+      cli:
+        command: "az network firewall create"
+      powershell:
+        command: "New-AzFirewall"
+      arm_bicep:
+        resource_type: "Microsoft.Network/azureFirewalls"
+    detection:
+      when_topic: "centralized security|hub-spoke|network protection"
+      should_mention: "Azure Firewall"
+    severity: medium
+    cross_reference: "/azure/firewall/overview"
+
+  - id: VNET-FW-002
+    type: configuration
+    source_section: "Network security"
+    recommendation: "Enable threat intelligence-based filtering on Azure Firewall"
+    required_in:
+      cli:
+        command: "az network firewall threat-intel-allowlist"
+        context: "firewall create|update"
+      arm_bicep:
+        property: "properties.threatIntelMode"
+        value: "Alert|Deny"
+    detection:
+      when_configuring: "Azure Firewall"
+      should_mention: "threat intelligence|threat intel"
+    severity: medium
+
+  - id: VNET-FW-003
+    type: configuration
+    source_section: "Network security"
+    recommendation: "Use Azure Firewall Premium with IDPS for enhanced security"
+    detection:
+      when_topic: "intrusion detection|intrusion prevention|advanced threat"
+      should_mention:
+        - "Firewall Premium"
+        - "IDPS"
+        - "intrusion detection"
+    severity: low
+    notes: "Premium tier recommended for high-security scenarios"
+
+  # --------------------------------------------------------------------------
+  # NETWORK SECURITY - DDoS PROTECTION
+  # --------------------------------------------------------------------------
+
+  - id: VNET-DDOS-001
+    type: configuration
+    source_section: "Network security"
+    recommendation: "Enable DDoS Protection Standard"
+    required_in:
+      cli:
+        command: "az network ddos-protection create"
+        context: "virtual network"
+      powershell:
+        command: "New-AzDdosProtectionPlan"
+      arm_bicep:
+        property: "properties.ddosProtectionPlan"
+    detection:
+      when_creating: "virtual network with public IP"
+      should_mention: "DDoS Protection|ddos-protection"
+    severity: high
+    cross_reference: "/azure/ddos-protection/manage-ddos-protection"
+
+  # --------------------------------------------------------------------------
+  # NETWORK SECURITY - SERVICE TAGS
+  # --------------------------------------------------------------------------
+
+  - id: VNET-TAG-001
+    type: configuration
+    source_section: "Network security"
+    recommendation: "Use service tags to simplify security rules"
+    required_in:
+      cli:
+        command: "az network nsg rule create"
+        context: "source-address-prefixes|destination-address-prefixes"
+      arm_bicep:
+        property: "serviceTag"
+    detection:
+      when_configuring: "NSG rule|firewall rule"
+      should_mention: "service tag|ServiceTag"
+    preferred_patterns:
+      - "Storage|AzureCloud|VirtualNetwork|Internet"
+    discouraged_patterns:
+      - "specific IP address.*Azure service"
+    severity: medium
+    cross_reference: "/azure/virtual-network/service-tags-overview"
+
+  # --------------------------------------------------------------------------
+  # NETWORK SECURITY - BASTION
+  # --------------------------------------------------------------------------
+
+  - id: VNET-BASTION-001
+    type: configuration
+    source_section: "Network security"
+    recommendation: "Implement Azure Bastion for secure RDP/SSH access"
+    required_in:
+      cli:
+        command: "az network bastion create"
+      powershell:
+        command: "New-AzBastion"
+      arm_bicep:
+        resource_type: "Microsoft.Network/bastionHosts"
+    detection:
+      when_topic: "RDP|SSH|remote access|VM access"
+      should_mention: "Azure Bastion|Bastion"
+    severity: critical
+    cross_reference: "/azure/bastion/bastion-overview"
+
+  - id: VNET-BASTION-002
+    type: anti_pattern
+    source_section: "Network security"
+    recommendation: "Do not expose VMs directly to the internet via public IPs for RDP/SSH"
+    prohibited_patterns:
+      cli:
+        - "az vm create.*--public-ip-address"
+        - "az network public-ip create.*--allocation-method.*az vm"
+      prose:
+        - "public IP.*RDP"
+        - "public IP.*SSH"
+        - "open port 3389"
+        - "open port 22"
+    exception:
+      context: "bastion|jumpbox|VPN"
+      note: "Public IP acceptable if behind Bastion or VPN"
+    severity: critical
+    alternative: "Use Azure Bastion or VPN Gateway for secure remote access"
+
+  # --------------------------------------------------------------------------
+  # NETWORK SECURITY - NAT GATEWAY
+  # --------------------------------------------------------------------------
+
+  - id: VNET-NAT-001
+    type: configuration
+    source_section: "Network security"
+    recommendation: "Implement Azure NAT Gateway for outbound traffic"
+    required_in:
+      cli:
+        command: "az network nat gateway create"
+      powershell:
+        command: "New-AzNatGateway"
+      arm_bicep:
+        resource_type: "Microsoft.Network/natGateways"
+    detection:
+      when_topic: "outbound traffic|egress|SNAT"
+      should_mention: "NAT Gateway"
+    severity: medium
+    cross_reference: "/azure/virtual-network/nat-gateway/nat-overview"
+
+  # --------------------------------------------------------------------------
+  # NETWORK SECURITY - PRIVATE LINK
+  # --------------------------------------------------------------------------
+
+  - id: VNET-PL-001
+    type: network
+    source_section: "Network security"
+    recommendation: "Use private endpoints and Private Link for Azure services"
+    required_in:
+      cli:
+        command: "az network private-endpoint create"
+      powershell:
+        command: "New-AzPrivateEndpoint"
+      arm_bicep:
+        resource_type: "Microsoft.Network/privateEndpoints"
+    detection:
+      when_accessing: "Azure Storage|SQL Database|Cosmos DB|Key Vault|PaaS"
+      should_mention: "private endpoint|Private Link"
+    severity: high
+    cross_reference: "/azure/private-link/private-link-overview"
+
+  - id: VNET-PL-002
+    type: anti_pattern
+    source_section: "Network security"
+    recommendation: "Do not access Azure PaaS services over public endpoints when private endpoints are available"
+    prohibited_patterns:
+      prose:
+        - "public endpoint.*storage account"
+        - "internet.*SQL Database"
+      code:
+        - pattern: "https://.*\\.blob\\.core\\.windows\\.net"
+          description: "Public blob endpoint without private endpoint context"
+    exception:
+      context: "private endpoint|Private Link|service endpoint"
+      note: "Public endpoint mentions acceptable when showing migration path"
+    severity: high
+
+  # --------------------------------------------------------------------------
+  # NETWORK SECURITY - PRIVATE SUBNETS
+  # --------------------------------------------------------------------------
+
+  - id: VNET-SUBNET-001
+    type: configuration
+    source_section: "Network security"
+    recommendation: "Configure subnets as private by default"
+    required_in:
+      cli:
+        command: "az network vnet subnet update"
+        flags:
+          - "--default-outbound-access false"
+      arm_bicep:
+        property: "properties.defaultOutboundAccess"
+        value: false
+    detection:
+      when_creating: "subnet"
+      should_mention: "private subnet|default outbound access"
+    severity: medium
+    cross_reference: "/azure/virtual-network/ip-services/default-outbound-access"
+
+  # --------------------------------------------------------------------------
+  # NETWORK SECURITY - ADAPTIVE HARDENING
+  # --------------------------------------------------------------------------
+
+  - id: VNET-ADAPT-001
+    type: prose
+    source_section: "Network security"
+    recommendation: "Apply Adaptive Network Hardening recommendations"
+    detection:
+      when_topic: "NSG optimization|rule recommendations"
+      should_mention: "Adaptive Network Hardening|Defender for Cloud"
+    severity: low
+    cross_reference: "/azure/defender-for-cloud/adaptive-network-hardening"
+
+  # --------------------------------------------------------------------------
+  # NETWORK SECURITY - ENCRYPTION
+  # --------------------------------------------------------------------------
+
+  - id: VNET-ENCRYPT-001
+    type: configuration
+    source_section: "Network security"
+    recommendation: "Enable Virtual Network encryption"
+    required_in:
+      cli:
+        command: "az network vnet create|update"
+        flags:
+          - "--enable-encryption true"
+          - "--encryption-enforcement-policy"
+      powershell:
+        command: "New-AzVirtualNetwork|Set-AzVirtualNetwork"
+        flags:
+          - "-EnableEncryption"
+      arm_bicep:
+        property: "properties.encryption.enabled"
+        value: true
+    detection:
+      when_creating: "virtual network"
+      should_mention: "encryption|encrypted"
+    severity: medium
+    cross_reference: "/azure/virtual-network/virtual-network-encryption-overview"
+
+  # --------------------------------------------------------------------------
+  # NETWORK SECURITY - PUBLIC IP MINIMIZATION
+  # --------------------------------------------------------------------------
+
+  - id: VNET-PUBIP-001
+    type: prose
+    source_section: "Network security"
+    recommendation: "Limit public IP address usage"
+    detection:
+      when_topic: "public IP|internet-facing"
+      should_mention:
+        - "minimize public IP"
+        - "shared public IP"
+        - "Front Door|Application Gateway"
+    severity: medium
+    notes: "Prefer shared ingress via Front Door or App Gateway"
+
+  - id: VNET-PUBIP-002
+    type: anti_pattern
+    source_section: "Network security"
+    recommendation: "Avoid unnecessary public IP addresses on VMs"
+    prohibited_patterns:
+      cli:
+        - pattern: "az vm create.*--public-ip-address.*--public-ip-sku"
+          description: "Creating VM with public IP without justification"
+      prose:
+        - "assign public IP to.*VM"
+    exception:
+      context: "bastion|jumpbox|load balancer|application gateway"
+      note: "Public IPs acceptable for specific ingress scenarios"
+    severity: medium
+
+  # --------------------------------------------------------------------------
+  # IDENTITY AND ACCESS MANAGEMENT
+  # --------------------------------------------------------------------------
+
+  - id: VNET-IAM-001
+    type: configuration
+    source_section: "Identity management"
+    recommendation: "Use Azure RBAC for network resource access"
+    required_in:
+      cli:
+        command: "az role assignment create"
+        context: "network|vnet|subnet|nsg"
+      powershell:
+        command: "New-AzRoleAssignment"
+    detection:
+      when_granting: "network access|contributor|owner"
+      should_mention:
+        - "RBAC|role-based access"
+        - "Network Contributor"
+        - "least privilege"
+    severity: high
+    cross_reference: "/azure/role-based-access-control/built-in-roles#networking"
+
+  - id: VNET-IAM-002
+    type: authentication
+    source_section: "Identity management"
+    recommendation: "Use managed identities for Azure resources"
+    preferred_patterns:
+      code:
+        - "DefaultAzureCredential"
+        - "ManagedIdentityCredential"
+        - "managed identity"
+        - "system-assigned identity"
+        - "user-assigned identity"
+    discouraged_patterns:
+      code:
+        - "connection string"
+        - "access key"
+        - "password"
+    severity: high
+    cross_reference: "/azure/active-directory/managed-identities-azure-resources/overview"
+
+  - id: VNET-IAM-003
+    type: prose
+    source_section: "Identity management"
+    recommendation: "Implement conditional access for network administrators"
+    detection:
+      when_topic: "admin access|network management"
+      should_mention: "conditional access|MFA"
+    severity: medium
+    cross_reference: "/azure/active-directory/conditional-access/overview"
+
+  - id: VNET-IAM-004
+    type: prose
+    source_section: "Identity management"
+    recommendation: "Regularly review and reconcile user access"
+    detection:
+      when_topic: "access review|audit|user access"
+      should_mention: "access review|review access"
+    severity: low
+    cross_reference: "/azure/active-directory/governance/access-reviews-overview"
+
+  # --------------------------------------------------------------------------
+  # PRIVILEGED ACCESS
+  # --------------------------------------------------------------------------
+
+  - id: VNET-PRIV-001
+    type: prose
+    source_section: "Privileged access"
+    recommendation: "Enforce multi-factor authentication for network administrators"
+    detection:
+      when_topic: "administrator|privileged access|network admin"
+      should_mention: "MFA|multifactor authentication|multi-factor"
+    severity: high
+    cross_reference: "/azure/active-directory/authentication/concept-mfa-howitworks"
+
+  - id: VNET-PRIV-002
+    type: prose
+    source_section: "Privileged access"
+    recommendation: "Use just-in-time access for network operations"
+    detection:
+      when_topic: "privileged|admin|network changes"
+      should_mention:
+        - "PIM|Privileged Identity Management"
+        - "just-in-time|JIT"
+    severity: medium
+    cross_reference: "/azure/active-directory/privileged-identity-management/pim-configure"
+
+  - id: VNET-PRIV-003
+    type: configuration
+    source_section: "Privileged access"
+    recommendation: "Monitor privileged network activities"
+    required_in:
+      cli:
+        command: "az monitor activity-log"
+        context: "network"
+    detection:
+      when_topic: "audit|logging|monitor changes"
+      should_mention: "Activity Log|audit log"
+    severity: medium
+    cross_reference: "/azure/azure-monitor/essentials/activity-log"
+
+  - id: VNET-PRIV-004
+    type: prose
+    source_section: "Privileged access"
+    recommendation: "Use dedicated administrative accounts with Privileged Access Workstations"
+    detection:
+      when_topic: "administrator account|secure workstation"
+      should_mention: "PAW|Privileged Access Workstation|dedicated admin"
+    severity: low
+    cross_reference: "/security/compass/overview"
+
+  # --------------------------------------------------------------------------
+  # DATA PROTECTION
+  # --------------------------------------------------------------------------
+
+  - id: VNET-DATA-001
+    type: prose
+    source_section: "Data protection"
+    recommendation: "Enable encryption in transit"
+    detection:
+      when_topic: "data transfer|traffic|communication"
+      should_mention: "TLS|encryption in transit|encrypted"
+    required_protocols:
+      - "TLS 1.2"
+      - "TLS 1.3"
+    severity: high
+    cross_reference: "/azure/security/fundamentals/encryption-overview#encryption-of-data-in-transit"
+
+  - id: VNET-DATA-002
+    type: configuration
+    source_section: "Data protection"
+    recommendation: "Enable Azure Virtual Network encryption"
+    required_in:
+      cli:
+        command: "az network vnet create|update"
+        flags:
+          - "--enable-encryption"
+      arm_bicep:
+        property: "properties.encryption.enabled"
+        value: true
+    severity: medium
+    cross_reference: "/azure/virtual-network/virtual-network-encryption-overview"
+
+  - id: VNET-DATA-003
+    type: configuration
+    source_section: "Data protection"
+    recommendation: "Enable MACsec for Azure ExpressRoute"
+    required_in:
+      cli:
+        command: "az network express-route port"
+        context: "MACsec"
+    detection:
+      when_topic: "ExpressRoute|hybrid connectivity"
+      should_mention: "MACsec|Layer 2 encryption"
+    severity: medium
+    cross_reference: "/azure/expressroute/expressroute-howto-macsec"
+
+  - id: VNET-DATA-004
+    type: prose
+    source_section: "Data protection"
+    recommendation: "Classify data based on sensitivity"
+    detection:
+      when_topic: "data classification|sensitive data"
+      should_mention: "classification|sensitivity|confidentiality"
+    severity: low
+
+  # --------------------------------------------------------------------------
+  # LOGGING AND THREAT DETECTION
+  # --------------------------------------------------------------------------
+
+  - id: VNET-LOG-001
+    type: configuration
+    source_section: "Logging and threat detection"
+    recommendation: "Centralize log collection with Azure Monitor"
+    required_in:
+      cli:
+        command: "az monitor diagnostic-settings create"
+        context: "virtual network|NSG|firewall"
+      powershell:
+        command: "Set-AzDiagnosticSetting"
+    detection:
+      when_topic: "logging|monitoring|diagnostics"
+      should_demonstrate: "diagnostic settings|Log Analytics"
+    severity: high
+    cross_reference: "/azure/azure-monitor/overview"
+
+  - id: VNET-LOG-002
+    type: configuration
+    source_section: "Logging and threat detection"
+    recommendation: "Enable Microsoft Defender for Cloud"
+    detection:
+      when_topic: "security monitoring|threat detection|security posture"
+      should_mention: "Defender for Cloud|Microsoft Defender"
+    severity: high
+    cross_reference: "/azure/defender-for-cloud/defender-for-cloud-introduction"
+
+  - id: VNET-LOG-003
+    type: configuration
+    source_section: "Logging and threat detection"
+    recommendation: "Configure security alerts and notifications"
+    required_in:
+      cli:
+        command: "az monitor metrics alert create"
+        context: "network"
+      powershell:
+        command: "Add-AzMetricAlertRuleV2"
+    detection:
+      when_topic: "alert|notification|security event"
+      should_demonstrate: "alert rule|action group"
+    severity: medium
+    cross_reference: "/azure/azure-monitor/alerts/alerts-overview"
+
+  - id: VNET-LOG-004
+    type: configuration
+    source_section: "Logging and threat detection"
+    recommendation: "Use Microsoft Sentinel for advanced threat detection"
+    detection:
+      when_topic: "SIEM|threat hunting|security analytics"
+      should_mention: "Microsoft Sentinel|Sentinel"
+    severity: medium
+    cross_reference: "/azure/sentinel/quickstart-onboard"
+
+  - id: VNET-LOG-005
+    type: configuration
+    source_section: "Logging and threat detection"
+    recommendation: "Enable comprehensive logging for network resources"
+    required_in:
+      cli:
+        command: "az monitor diagnostic-settings create"
+        resources:
+          - "virtual network"
+          - "load balancer"
+          - "application gateway"
+          - "firewall"
+    detection:
+      when_creating: "network resource"
+      should_mention: "diagnostic logging|diagnostic settings"
+    severity: medium
+
+  # --------------------------------------------------------------------------
+  # ASSET MANAGEMENT
+  # --------------------------------------------------------------------------
+
+  - id: VNET-ASSET-001
+    type: configuration
+    source_section: "Asset management"
+    recommendation: "Use Azure Policy for governance and resource restrictions"
+    required_in:
+      cli:
+        command: "az policy assignment create"
+        context: "network|virtual network"
+      powershell:
+        command: "New-AzPolicyAssignment"
+    detection:
+      when_topic: "governance|compliance|policy"
+      should_mention: "Azure Policy"
+    severity: medium
+    cross_reference: "/azure/virtual-network/policy-reference"
+
+  - id: VNET-ASSET-002
+    type: prose
+    source_section: "Asset management"
+    recommendation: "Tag network resources for organization"
+    detection:
+      when_creating: "network resource"
+      should_demonstrate:
+        cli: "--tags"
+        powershell: "-Tag"
+    severity: low
+    cross_reference: "/azure/azure-resource-manager/management/tag-resources"
+
+  - id: VNET-ASSET-003
+    type: configuration
+    source_section: "Asset management"
+    recommendation: "Monitor resource configuration changes"
+    detection:
+      when_topic: "change tracking|resource inventory|configuration drift"
+      should_mention: "Resource Graph|change detection"
+    severity: low
+    cross_reference: "/azure/governance/resource-graph/first-query-portal"
+
+  - id: VNET-ASSET-004
+    type: prose
+    source_section: "Asset management"
+    recommendation: "Implement standardized configuration management"
+    detection:
+      when_topic: "deployment|infrastructure as code|IaC"
+      should_mention:
+        - "ARM template|Bicep|Terraform"
+        - "Azure Blueprints"
+        - "version control"
+    severity: medium
+    cross_reference: "/azure/governance/blueprints/create-blueprint-portal"
+
+  # --------------------------------------------------------------------------
+  # SECURITY TESTING
+  # --------------------------------------------------------------------------
+
+  - id: VNET-TEST-001
+    type: prose
+    source_section: "Security testing"
+    recommendation: "Conduct regular penetration testing"
+    detection:
+      when_topic: "security assessment|penetration test|pen test"
+      should_mention: "penetration test|security test"
+    severity: medium
+
+  - id: VNET-TEST-002
+    type: prose
+    source_section: "Security testing"
+    recommendation: "Implement vulnerability scanning"
+    detection:
+      when_topic: "vulnerability|security scan"
+      should_mention: "vulnerability scan|security scanner"
+    severity: medium
+
+  - id: VNET-TEST-003
+    type: prose
+    source_section: "Security testing"
+    recommendation: "Validate network segmentation"
+    detection:
+      when_topic: "segmentation|isolation|network boundary"
+      should_mention: "test segmentation|validate isolation"
+    severity: medium
+
+  - id: VNET-TEST-004
+    type: configuration
+    source_section: "Security testing"
+    recommendation: "Enable Virtual Network Verifier"
+    detection:
+      when_topic: "connectivity test|reachability|network verification"
+      should_mention: "Virtual Network Verifier|Network Manager"
+    severity: low
+    cross_reference: "/azure/virtual-network-manager/concept-virtual-network-verifier"
+
+  - id: VNET-TEST-005
+    type: configuration
+    source_section: "Security testing"
+    recommendation: "Use Azure Chaos Studio for resilience testing"
+    detection:
+      when_topic: "chaos engineering|resilience|failure simulation"
+      should_mention: "Chaos Studio|chaos experiment"
+    severity: low
+    cross_reference: "/azure/chaos-studio/chaos-studio-overview"
+
+  # --------------------------------------------------------------------------
+  # BACKUP AND RECOVERY
+  # --------------------------------------------------------------------------
+
+  - id: VNET-BACKUP-001
+    type: configuration
+    source_section: "Backup and recovery"
+    recommendation: "Export and protect network configurations"
+    required_in:
+      cli:
+        command: "az group export"
+        context: "network|vnet"
+      powershell:
+        command: "Export-AzResourceGroup"
+    detection:
+      when_topic: "backup|disaster recovery|export"
+      should_mention: "export template|ARM template"
+    severity: medium
+    cross_reference: "/azure/azure-resource-manager/templates/export-template-portal"
+
+  - id: VNET-BACKUP-002
+    type: prose
+    source_section: "Backup and recovery"
+    recommendation: "Document network architecture"
+    detection:
+      when_topic: "documentation|architecture|design"
+      should_mention: "document|diagram|IP scheme"
+    severity: low
+
+  - id: VNET-BACKUP-003
+    type: prose
+    source_section: "Backup and recovery"
+    recommendation: "Test and validate recovery procedures"
+    detection:
+      when_topic: "DR test|recovery test|failover test"
+      should_mention: "test recovery|validate recovery"
+    severity: medium
+
+  - id: VNET-BACKUP-004
+    type: prose
+    source_section: "Backup and recovery"
+    recommendation: "Prepare redundant networking infrastructure"
+    detection:
+      when_topic: "redundancy|disaster recovery|failover"
+      should_mention:
+        - "redundant|duplicate"
+        - "separate region"
+        - "paired region"
+    severity: medium
+
+  - id: VNET-BACKUP-005
+    type: anti_pattern
+    source_section: "Backup and recovery"
+    recommendation: "Avoid overlapping IP address ranges between production and DR"
+    prohibited_patterns:
+      prose:
+        - "same IP range.*DR"
+        - "overlapping.*address space.*failover"
+    severity: medium
+    notes: "Overlapping IP ranges complicate failover and VPN"
+
+  # --------------------------------------------------------------------------
+  # INCIDENT RESPONSE
+  # --------------------------------------------------------------------------
+
+  - id: VNET-IR-001
+    type: prose
+    source_section: "Incident response"
+    recommendation: "Create an incident response guide"
+    detection:
+      when_topic: "incident response|security incident"
+      should_mention: "incident response|playbook|runbook"
+    severity: medium
+
+  - id: VNET-IR-002
+    type: configuration
+    source_section: "Incident response"
+    recommendation: "Configure security incident contact details"
+    required_in:
+      cli:
+        command: "az security contact create"
+    detection:
+      when_topic: "security contact|incident notification"
+      should_mention: "security contact|incident contact"
+    severity: medium
+    cross_reference: "/azure/defender-for-cloud/configure-email-notifications"
+
+  - id: VNET-IR-003
+    type: configuration
+    source_section: "Incident response"
+    recommendation: "Incorporate security alerts into incident response"
+    detection:
+      when_topic: "alert|incident management"
+      should_mention:
+        - "Continuous Export"
+        - "Sentinel|SIEM"
+    severity: medium
+
+  - id: VNET-IR-004
+    type: configuration
+    source_section: "Incident response"
+    recommendation: "Automate incident response"
+    detection:
+      when_topic: "automation|automated response"
+      should_mention:
+        - "Workflow Automation"
+        - "Logic Apps"
+        - "automated response"
+    severity: low
+
+  # --------------------------------------------------------------------------
+  # PACKET CAPTURE AND FORENSICS
+  # --------------------------------------------------------------------------
+
+  - id: VNET-FORENSIC-001
+    type: configuration
+    source_section: "Network security"
+    recommendation: "Configure packet capture for forensic analysis"
+    required_in:
+      cli:
+        command: "az network watcher packet-capture create"
+      powershell:
+        command: "New-AzNetworkWatcherPacketCapture"
+    detection:
+      when_topic: "forensics|packet capture|traffic analysis|incident investigation"
+      should_mention: "packet capture|Network Watcher"
+    severity: low
+    cross_reference: "/azure/network-watcher/network-watcher-packet-capture-overview"
+
+# ============================================================================
+# EXTRACTION SUMMARY
+# ============================================================================
+
+summary:
+  total_rules: 51
+  by_type:
+    configuration: 28
+    prose: 17
+    anti_pattern: 4
+    authentication: 1
+    network: 1
+  by_severity:
+    critical: 2   # Bastion, avoid public IP for RDP/SSH
+    high: 12      # NSG, NSG flow logs, DDoS, Private Link, RBAC, managed identity, MFA, encryption, logging
+    medium: 26    # Various best practices
+    low: 11       # Informational guidance
+  
+  high_confidence_rules:
+    - VNET-NSG-001   # NSG creation - clear CLI/PS commands
+    - VNET-NSG-003   # NSG flow logs - clear CLI/PS commands
+    - VNET-DDOS-001  # DDoS Protection - clear CLI/PS commands
+    - VNET-BASTION-001  # Bastion - clear CLI/PS commands
+    - VNET-BASTION-002  # No public IP for RDP/SSH - clear anti-pattern
+    - VNET-PL-001    # Private endpoints - clear CLI/PS commands
+    - VNET-ENCRYPT-001  # VNet encryption - clear CLI flags
+    - VNET-LOG-001   # Diagnostic logging - clear CLI/PS commands
+    
+  low_confidence_rules:
+    - VNET-NSG-002   # Deny by default - prose guidance
+    - VNET-PRIV-002  # JIT/PIM - prose detection hard
+    - VNET-DATA-004  # Data classification - prose only
+    - VNET-IR-001    # Incident response guide - prose only
+
+# ============================================================================
+# NOTES ON EXTRACTION FEASIBILITY
+# ============================================================================
+
+feasibility_assessment:
+  
+  highly_automatable:
+    description: "Rules with clear CLI/PowerShell command requirements"
+    examples:
+      - "NSG creation and association to subnets"
+      - "NSG flow log configuration"
+      - "Azure Bastion deployment"
+      - "Private endpoint creation"
+      - "DDoS Protection enablement"
+      - "Virtual Network encryption flag"
+      - "Diagnostic settings creation"
+    confidence: ">90% detection accuracy"
+    
+  moderately_automatable:
+    description: "Rules with clear patterns but context-dependent"
+    examples:
+      - "Public IP assignment to VMs (need context for exceptions)"
+      - "Service tag usage vs specific IPs"
+      - "Managed identity vs connection strings"
+      - "Azure Firewall deployment (varies by architecture)"
+    confidence: "70-90% detection accuracy"
+    notes: "May need context analysis to reduce false positives"
+    
+  difficult_to_automate:
+    description: "Rules requiring prose analysis or architecture understanding"
+    examples:
+      - "Deny by default approach"
+      - "Defense-in-depth principles"
+      - "Just-in-time access recommendations"
+      - "Incident response documentation"
+      - "Data classification"
+      - "Penetration testing recommendations"
+    confidence: "50-70% detection accuracy"
+    notes: "Requires NLP to detect prose patterns; high false positive risk"
+
+# ============================================================================
+# DOCSET AUDIT PRIORITIES
+# ============================================================================
+
+audit_priorities:
+
+  critical_checks:
+    description: "Must be validated in all quickstarts, tutorials, and how-tos"
+    rules:
+      - VNET-BASTION-001  # All VM access articles must mention Bastion
+      - VNET-BASTION-002  # No public IP for RDP/SSH without Bastion context
+      - VNET-NSG-001      # All subnet/VM creation must include NSGs
+      - VNET-PL-001       # All PaaS connectivity should show private endpoints
+      - VNET-DDOS-001     # Production VNet articles should mention DDoS
+
+  high_priority_checks:
+    description: "Should be validated in most procedural content"
+    rules:
+      - VNET-NSG-003      # Traffic monitoring articles need flow logs
+      - VNET-ENCRYPT-001  # VNet creation should show encryption option
+      - VNET-LOG-001      # All resource creation should show diagnostic settings
+      - VNET-IAM-001      # Access control articles need RBAC
+      - VNET-IAM-002      # SDK/code samples should use managed identity
+
+  expected_docset_articles:
+    description: "Articles expected to exist covering these security topics"
+    topics:
+      - "NSG creation and management"
+      - "Azure Bastion deployment"
+      - "Private endpoint configuration"
+      - "DDoS Protection enablement"
+      - "Virtual Network encryption"
+      - "NSG flow log configuration"
+      - "Azure Firewall deployment"
+      - "Network Watcher packet capture"
+      - "Service endpoint configuration"
+      - "NAT Gateway deployment"

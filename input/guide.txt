@@ -113,25 +113,43 @@ Use Microsoft Learn callout syntax for information that requires visual emphasis
 
 ## Content Organization Standards
 
-### Security Domain Ordering (CRITICAL)
-**Foundation-first principle**: Order domains by foundational importance to the specific service, not rigid sequence. **This is MANDATORY.**
+### Security Domain Ordering
+Use a consistent section order across all SCI articles. This predictable structure helps readers find content quickly and simplifies authoring and review.
 
-**Service-specific ordering rules:**
+**Standard section order:**
 
-| Service Category | Section Order |
-|------------------|---------------|
-| **Key/Secret Management** (Key Vault, Managed HSM) | Service-specific → Data protection → Identity → Network → TLS/HTTPS → Logging → Compliance → Backup |
-| **Identity Services** (Entra ID, B2C) | Identity → Network → Data protection → Logging → Compliance → Backup → Service-specific |
-| **Storage Services** (Blob, Files, Data Lake) | Data protection → Network → Identity → Logging → Compliance → Backup → Service-specific |
-| **Compute Services** (VMs, App Service, Functions) | Network → Identity → Data protection → Logging → Compliance → Backup → Service-specific |
-| **Database Services** (SQL, Cosmos DB, PostgreSQL) | Data protection → Network → Identity → Logging → Compliance → Backup → Service-specific |
-| **All Other Services** | Network → Identity → Data protection → Logging → Compliance → Backup → Service-specific |
+1. **Service-specific security** (optional — include only when needed)
+2. **Network security**
+3. **Identity and access management**
+4. **Data protection**
+5. **Logging and monitoring**
+6. **Compliance and governance**
+7. **Backup and recovery**
 
-**Apply this ordering logic:**
-1. Identify the service category from the table
-2. Reorder all security domain sections accordingly
-3. Service-specific security fundamentals come FIRST for key management services
-4. Include TLS/HTTPS section if service has specific protocol requirements
+**When to include Service-specific security:**
+- The service has unique architectural considerations (e.g., Key Vault's vault-per-application guidance)
+- Official documentation describes anti-patterns or inappropriate uses
+- The service has distinct security fundamentals not covered by standard domains
+
+When present, Service-specific security comes first because it establishes context that other sections build on.
+
+### Zero Trust Banner Placement
+Place the Zero Trust include statement **after all intro content, immediately before the first H2**:
+- Don't split intro paragraphs or paragraph+list combinations
+- The banner creates a visual break marking the transition from "what this is" to "what to do"
+- This placement is consistent regardless of intro structure (1 paragraph, 2+ paragraphs, or paragraphs + lists)
+
+```markdown
+# Secure your <service> deployment
+
+<Intro paragraph(s) and any bulleted lists that belong together>
+
+This article provides security recommendations...
+
+[!INCLUDE [Zero Trust statement](...)]
+
+## Network security
+```
 
 ### Optional Sections (Include When Applicable)
 

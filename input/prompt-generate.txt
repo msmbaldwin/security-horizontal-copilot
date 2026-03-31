@@ -42,10 +42,21 @@ Research the service to classify it into ONE of these categories:
 | **Integration Services** | Logic Apps, Event Grid, Service Bus | Message and workflow security |
 | **General PaaS** | Any service not fitting above | Default ordering |
 
-### Step 2: Apply Section Ordering Rule (CRITICAL)
-After classifying the service, apply the **Security Domain Ordering** rules from `guide.txt` to determine section order.
+### Step 2: Apply Standard Section Order
+Use the **standard section order** from `guide.txt` for all articles:
 
-**CRITICAL**: The section order in your output MUST match the service category. Do not use default ordering for specialized services.
+1. **Service-specific security** (optional — include only when needed)
+2. **Network security**
+3. **Identity and access management**
+4. **Data protection**
+5. **Logging and monitoring**
+6. **Compliance and governance**
+7. **Backup and recovery**
+
+**When to include Service-specific security:**
+- The service has unique architectural considerations
+- Official documentation describes anti-patterns or inappropriate uses
+- The service has distinct security fundamentals not covered by standard domains
 
 ## AI Parseability (GEO)
 
@@ -138,11 +149,11 @@ When recommendations have prerequisites or exceptions, format as sub-bullets:
   - Non-actionable items like "Understand the shared responsibility model" should be removed or reframed as actionable guidance
   - Focus on configurations customers can actually choose to enable, disable, or configure
 - Include anti-patterns only when supported by official documentation
-- Section ordering MUST follow service category rules
+- Section ordering MUST follow standard order from guide.txt
 
 ## Execution Process
 
-1. **Classify Service**: Determine service category and required section ordering using Service Classification rules.
+1. **Classify Service**: Determine service category to understand primary security concerns.
 2. **Research**: Execute Required Research queries, then applicable Conditional queries.
 3. **Generate Content**: Build article following `template.txt` structure and `guide.txt` writing standards.
 4. **Verify Specificity**: Ensure each recommendation applies specifically to `<Service>`, not generic Azure advice.

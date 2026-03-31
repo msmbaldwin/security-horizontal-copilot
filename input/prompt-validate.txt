@@ -12,21 +12,25 @@ Systematically review and validate every aspect of the currently open security a
 
 ## Phase 1: Structural Validation
 
-### Service Category and Section Ordering
-First, verify the article uses the correct section ordering for the service category:
+### Standard Section Ordering
+Verify the article uses the standard section order:
 
-| Service Category | Expected Section Order |
-|------------------|------------------------|
-| **Key/Secret Management** (Key Vault, Managed HSM) | Service-specific → Data protection → Identity → Network → TLS/HTTPS → Logging → Compliance → Backup |
-| **Identity Services** (Entra ID, B2C) | Identity → Network → Data protection → Logging → Compliance → Backup → Service-specific |
-| **Storage Services** (Blob, Files, Data Lake) | Data protection → Network → Identity → Logging → Compliance → Backup → Service-specific |
-| **Compute Services** (VMs, App Service, Functions) | Network → Identity → Data protection → Logging → Compliance → Backup → Service-specific |
-| **Database Services** (SQL, Cosmos DB, PostgreSQL) | Data protection → Network → Identity → Logging → Compliance → Backup → Service-specific |
-| **All Others** | Network → Identity → Data protection → Logging → Compliance → Backup → Service-specific |
+1. **Service-specific security** (optional — include only when needed)
+2. **Network security**
+3. **Identity and access management**
+4. **Data protection**
+5. **Logging and monitoring**
+6. **Compliance and governance**
+7. **Backup and recovery**
+
+**When Service-specific security should be present:**
+- The service has unique architectural considerations
+- Official documentation describes anti-patterns or inappropriate uses
+- The service has distinct security fundamentals not covered by standard domains
 
 **Check:**
-- [ ] Service category is correctly identified
-- [ ] Section order matches the service category
+- [ ] Standard section order is followed
+- [ ] Service-specific security section is present only when warranted
 - [ ] TLS/HTTPS section included if service has specific protocol requirements
 - [ ] Related security articles section included if sub-resource articles exist
 
@@ -64,7 +68,7 @@ Classify each issue found:
   - Hallucinated features that don't exist
   - Fundamentally incorrect implementation guidance
   - Fabricated anti-patterns without documentation support
-  - Wrong section ordering for service category
+  - Wrong section ordering (not following standard order)
 
 - **HIGH** (Significant rewrite needed):
   - Vague or generic guidance that could apply to any Azure service
@@ -143,7 +147,7 @@ Before completing validation, verify:
 - [ ] Content is optimized for AI parsing
 - [ ] Article structure matches template
 - [ ] Recommendations align with workspace documentation when available
-- [ ] Section ordering follows service category rules
+- [ ] Section ordering follows standard order
 - [ ] Anti-patterns are included only when documentation supports them (not fabricated)
 
 ## Phase 4: Completeness Validation

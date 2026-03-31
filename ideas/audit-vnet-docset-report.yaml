@@ -1,0 +1,430 @@
+# Security Coverage Audit Report: Azure Virtual Network Docset
+# Policy Source: ideas/prototype-vnet-policy-extraction.yaml
+# Docset: /azure/virtual-network/
+# Audit Date: 2026-03-17
+# Status: Initial Audit
+
+service: azure-virtual-network
+docset_path: /azure/virtual-network/
+security_article: secure-virtual-network.md
+audit_date: 2026-03-17
+
+# ============================================================================
+# DOCSET SUMMARY
+# ============================================================================
+
+docset_metrics:
+  total_articles: 75
+  by_type:
+    tutorials: 6
+    how_to: 6
+    quickstarts: 1
+    overviews: 16
+    concepts: 1
+    faqs: 1
+    other: 44
+
+# ============================================================================
+# COMPLIANCE SUMMARY
+# ============================================================================
+
+compliance_summary:
+  overall_score: "68%"  # Estimated based on rule violations
+  critical_violations: 1
+  high_violations: 3
+  medium_violations: 8
+  low_violations: 5
+  
+  compliant_articles:
+    count: 8
+    list:
+      - quickstart-create-virtual-network.md   # Uses Bastion, no public IP on VMs
+      - tutorial-create-route-table.md         # Uses Bastion
+      - tutorial-restrict-network-access-to-resources.md  # Uses Bastion
+      - tutorial-connect-virtual-networks.md   # Uses Bastion
+      - create-virtual-machine-accelerated-networking.md  # Uses Bastion
+      - how-to-create-encryption.md            # Shows encryption properly
+      - virtual-network-nsg-manage-log.md      # Shows flow logs
+      - how-to-virtual-machine-mtu.md          # Uses Bastion
+
+  non_compliant_articles:
+    count: 2
+    list:
+      - tutorial-filter-network-traffic.md     # CRITICAL: VMs with public IPs, no Bastion
+
+# ============================================================================
+# CRITICAL VIOLATIONS
+# ============================================================================
+
+critical_violations:
+
+  - id: AUDIT-CRIT-001
+    rule_violated: VNET-BASTION-002
+    severity: critical
+    article: tutorial-filter-network-traffic.md
+    description: "VMs created with public IP addresses; no Azure Bastion deployment"
+    evidence:
+      - line: 504
+        content: "Public IP | Leave the default of a new public IP"
+      - line: 527
+        content: "Create a public IP address for each VM with New-AzPublicIpAddress"
+      - line: 841
+        content: "browse to http://<public-ip-address-from-previous-step>"
+    impact: "Users learn insecure pattern of exposing VMs directly to internet"
+    recommended_fix: |
+      1. Add Azure Bastion deployment section (like other tutorials)
+      2. Remove public IP from VMs
+      3. Change testing instructions to use Bastion for SSH access
+      4. Keep web server testing via Application Gateway or load balancer public IP
+    work_item_priority: P1
+
+# ============================================================================
+# HIGH VIOLATIONS
+# ============================================================================
+
+high_violations:
+
+  - id: AUDIT-HIGH-001
+    rule_violated: VNET-LOG-001
+    severity: high
+    description: "Only 2 articles mention diagnostic settings configuration"
+    articles_missing_coverage:
+      - quickstart-create-virtual-network.md
+      - tutorial-create-route-table.md
+      - tutorial-filter-network-traffic.md
+      - "Most how-to articles"
+    recommended_fix: |
+      Add diagnostic settings configuration to major procedural articles,
+      or add note about enabling logging with link to monitoring article.
+    
+  - id: AUDIT-HIGH-002
+    rule_violated: VNET-IAM-002
+    severity: high
+    description: "Only 1 article mentions managed identities"
+    impact: "SDK code samples may not demonstrate secure authentication"
+    recommended_fix: |
+      Review any articles with code samples to ensure they use 
+      DefaultAzureCredential or managed identities.
+
+  - id: AUDIT-HIGH-003
+    rule_violated: VNET-LOG-002
+    severity: high
+    description: "Only 2 articles mention Microsoft Defender for Cloud"
+    articles_with_coverage:
+      - secure-virtual-network.md
+      - virtual-network-nsg-manage-log.md  # partial
+    recommended_fix: |
+      Add Defender for Cloud recommendation to overview articles
+      and major tutorials.
+
+# ============================================================================
+# MEDIUM VIOLATIONS
+# ============================================================================
+
+medium_violations:
+
+  - id: AUDIT-MED-001
+    rule_violated: "Cross-reference to security article"
+    severity: medium
+    description: "No tutorials or how-to articles cross-reference secure-virtual-network.md"
+    articles_missing_crossref:
+      - tutorial-connect-virtual-networks.md
+      - tutorial-create-route-table.md
+      - tutorial-filter-network-traffic.md
+      - tutorial-restrict-network-access-to-resources.md
+      - tutorial-tap-virtual-network-cli.md
+      - tutorial-virtual-network-tap-portal.md
+      - quickstart-create-virtual-network.md
+      - how-to-configure-subnet-peering.md
+      - how-to-create-encryption.md
+      - how-to-create-virtual-network-routing-appliance.md
+      - how-to-dhcp-azure.md
+      - how-to-multiple-prefixes-subnet.md
+      - how-to-virtual-machine-mtu.md
+    recommended_fix: |
+      Add "Related content" or "Next steps" section with link:
+      "For security best practices, see [Secure your Virtual Network deployment](secure-virtual-network.md)"
+
+  - id: AUDIT-MED-002
+    rule_violated: VNET-DDOS-001
+    severity: medium
+    description: "Only 4 articles mention DDoS Protection"
+    articles_with_coverage:
+      - secure-virtual-network.md
+      - virtual-networks-faq.md
+      - network-overview.md
+      - concepts-and-best-practices.md
+    articles_missing_coverage:
+      - quickstart-create-virtual-network.md  # Should mention for production
+      - virtual-networks-overview.md
+    recommended_fix: |
+      Add DDoS Protection recommendation to VNet overview article
+      and note in quickstart about production considerations.
+
+  - id: AUDIT-MED-003
+    rule_violated: VNET-ENCRYPT-001
+    severity: medium
+    description: "VNet encryption not mentioned in main quickstart"
+    article: quickstart-create-virtual-network.md
+    recommended_fix: |
+      Add note about encryption option or link to how-to-create-encryption.md
+
+  - id: AUDIT-MED-004
+    rule_violated: VNET-PL-001
+    severity: medium
+    description: "13 articles mention Private Link but procedural coverage could improve"
+    notes: "Good conceptual coverage, but limited procedural examples"
+
+  - id: AUDIT-MED-005
+    rule_violated: VNET-ASSET-001
+    severity: medium
+    description: "Azure Policy mentioned in 7 articles - adequate"
+    status: ACCEPTABLE
+
+  - id: AUDIT-MED-006
+    rule_violated: VNET-NSG-003
+    severity: medium
+    description: "NSG flow logs mentioned in 8 articles"
+    status: ACCEPTABLE
+    notes: "Good coverage, dedicated article exists"
+
+  - id: AUDIT-MED-007
+    rule_violated: VNET-FW-001
+    severity: medium
+    description: "Azure Firewall not heavily featured in VNet docs"
+    notes: "May be intentional - Firewall has its own docset"
+    status: ACCEPTABLE
+
+  - id: AUDIT-MED-008
+    rule_violated: VNET-NAT-001
+    severity: medium
+    description: "NAT Gateway coverage in VNet docs could improve"
+    recommended_fix: "Add cross-reference in outbound connectivity scenarios"
+
+# ============================================================================
+# LOW VIOLATIONS
+# ============================================================================
+
+low_violations:
+
+  - id: AUDIT-LOW-001
+    rule_violated: VNET-TEST-004
+    severity: low
+    description: "Virtual Network Verifier not mentioned in docset"
+    recommended_fix: "Add to troubleshooting or verification articles"
+
+  - id: AUDIT-LOW-002
+    rule_violated: VNET-TEST-005
+    severity: low
+    description: "Azure Chaos Studio not mentioned in docset"
+    recommended_fix: "Consider adding to resilience/testing content"
+
+  - id: AUDIT-LOW-003
+    rule_violated: VNET-ASSET-002
+    severity: low
+    description: "Resource tagging guidance minimal"
+    recommended_fix: "Add tagging best practices to planning article"
+
+  - id: AUDIT-LOW-004
+    rule_violated: VNET-PRIV-002
+    severity: low
+    description: "PIM/JIT access not documented for network operations"
+    status: ACCEPTABLE
+    notes: "May be covered in general Azure RBAC docs"
+
+  - id: AUDIT-LOW-005
+    rule_violated: VNET-DATA-004
+    severity: low
+    description: "Data classification guidance minimal"
+    status: ACCEPTABLE
+    notes: "General guidance, not VNet-specific"
+
+# ============================================================================
+# SECURITY COVERAGE BY TOPIC
+# ============================================================================
+
+security_topic_coverage:
+
+  well_covered:
+    - topic: "Network Security Groups"
+      articles: 10+
+      dedicated_articles:
+        - network-security-groups-overview.md
+        - network-security-group-how-it-works.md
+        - manage-network-security-group.md
+        - application-security-groups.md
+        - tutorial-filter-network-traffic.md
+      assessment: "Excellent coverage"
+      
+    - topic: "Azure Bastion"
+      articles: 11
+      assessment: "Good coverage in most procedural content"
+      
+    - topic: "Service Tags"
+      articles: 16
+      dedicated_article: service-tags-overview.md
+      assessment: "Excellent coverage"
+      
+    - topic: "Private Link / Private Endpoints"
+      articles: 13
+      assessment: "Good conceptual coverage"
+      
+    - topic: "VNet Encryption"
+      articles: 8
+      dedicated_articles:
+        - virtual-network-encryption-overview.md
+        - how-to-create-encryption.md
+        - virtual-network-encryption-faq.yml
+      assessment: "Good coverage"
+
+  needs_improvement:
+    - topic: "DDoS Protection"
+      articles: 4
+      gap: "Not mentioned in quickstart or main overview"
+      
+    - topic: "Diagnostic Settings / Logging"
+      articles: 2
+      gap: "Should be shown in procedural content"
+      
+    - topic: "Microsoft Defender for Cloud"
+      articles: 2
+      gap: "Should recommend in more places"
+      
+    - topic: "Managed Identities"
+      articles: 1
+      gap: "Code samples need review"
+
+  missing_coverage:
+    - topic: "Virtual Network Verifier"
+      articles: 0
+      
+    - topic: "Azure Chaos Studio for network testing"
+      articles: 0
+
+# ============================================================================
+# PROCEDURAL CONTENT AUDIT
+# ============================================================================
+
+procedural_audit:
+
+  quickstarts:
+    - article: quickstart-create-virtual-network.md
+      bastion_used: true
+      public_ip_on_vm: false
+      nsg_demonstrated: false  # Uses Bastion, NSG optional
+      encryption_mentioned: false
+      cross_ref_security: false
+      compliance: PARTIAL
+      notes: "Good security posture, could add encryption/DDoS notes"
+
+  tutorials:
+    - article: tutorial-filter-network-traffic.md
+      bastion_used: false
+      public_ip_on_vm: true
+      nsg_demonstrated: true
+      cross_ref_security: false
+      compliance: VIOLATION
+      notes: "CRITICAL: Must be updated to use Bastion"
+      
+    - article: tutorial-create-route-table.md
+      bastion_used: true
+      public_ip_on_vm: false
+      cross_ref_security: false
+      compliance: COMPLIANT
+      
+    - article: tutorial-restrict-network-access-to-resources.md
+      bastion_used: true
+      public_ip_on_vm: false
+      private_endpoint_shown: true
+      cross_ref_security: false
+      compliance: COMPLIANT
+      notes: "Excellent security content"
+      
+    - article: tutorial-connect-virtual-networks.md
+      bastion_used: true
+      cross_ref_security: false
+      compliance: COMPLIANT
+
+    - article: tutorial-tap-virtual-network-cli.md
+      compliance: NOT_AUDITED
+      notes: "TAP feature specific"
+
+    - article: tutorial-virtual-network-tap-portal.md
+      compliance: NOT_AUDITED
+      notes: "TAP feature specific"
+
+  how_to:
+    - article: how-to-create-encryption.md
+      encryption_demonstrated: true
+      cross_ref_security: false
+      compliance: COMPLIANT
+      
+    - article: create-virtual-machine-accelerated-networking.md
+      bastion_used: true
+      cross_ref_security: false
+      compliance: COMPLIANT
+
+# ============================================================================
+# RECOMMENDED ACTIONS
+# ============================================================================
+
+recommended_actions:
+
+  priority_1_critical:
+    - action: "Fix tutorial-filter-network-traffic.md"
+      effort: "Medium (2-4 hours)"
+      description: |
+        Replace public IP + direct access pattern with Azure Bastion.
+        This is a security anti-pattern that users will copy.
+      
+  priority_2_high:
+    - action: "Add security article cross-references"
+      effort: "Low (1-2 hours)"
+      description: |
+        Add link to secure-virtual-network.md in Related content
+        or Next steps section of all tutorials and how-to articles.
+        
+    - action: "Review articles for diagnostic logging guidance"
+      effort: "Medium"
+      description: |
+        Add note about enabling diagnostic settings in major
+        procedural articles, or add to Next steps.
+
+  priority_3_medium:
+    - action: "Add DDoS Protection mention to quickstart"
+      effort: "Low"
+      description: |
+        Add production considerations note mentioning DDoS Protection.
+        
+    - action: "Add encryption note to quickstart"
+      effort: "Low"
+      description: |
+        Mention VNet encryption option with link to how-to article.
+
+  priority_4_low:
+    - action: "Add Virtual Network Verifier content"
+      effort: "Medium"
+      description: |
+        Create or update article showing network verification tools.
+        
+    - action: "Review code samples for managed identity usage"
+      effort: "Medium"
+      description: |
+        Ensure any SDK code samples use DefaultAzureCredential.
+
+# ============================================================================
+# AUDIT METHODOLOGY
+# ============================================================================
+
+methodology:
+  approach: "Automated grep-based scanning with manual review"
+  tools_used:
+    - "grep for pattern matching"
+    - "file listing and counting"
+    - "manual file reading for context"
+  limitations:
+    - "Prose pattern detection has false positives/negatives"
+    - "Context-dependent rules require manual review"
+    - "Some includes/shared content not fully analyzed"
+  coverage: "All .md files in /azure/virtual-network/ root (75 files)"
+  excluded: "ip-services/ subdirectory, media/, YML files"
